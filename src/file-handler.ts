@@ -17,6 +17,10 @@ export class FileHandler {
     this._fileDirectory = mkdtempSync(path.join(os.tmpdir(), 'screenshot-glb'));
   }
 
+  async createFile(filePath: string, fileContents: string): Promise<void> {
+    // AI! implement
+  }
+
   async addFile(filePath: string): Promise<string> {
     const fileName = path.basename(filePath);
     await copyFile(

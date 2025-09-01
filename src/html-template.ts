@@ -78,9 +78,6 @@ export function htmlTemplate({
   if (inputPaths.length > 1) {
     defaultAttributes.src = inputPaths[1]
     const input1AttributesString = toHTMLAttributeString(defaultAttributes);
-    // AI when there are two model viewers the camera controls should be synchronized
-    // AI so that both viewers have the same camera-orbit attributes. changing the camera-oribt of
-    // one of the viewers should update the other one to match. AI!
     modelViewer1 = `<model-viewer id="viewer1" camera-controls ${input1AttributesString} ${modelViewerArgsString}/>`;
     tableStart = '<table><tr><td>'
     tableSeparator = '</td><td>'
@@ -97,6 +94,34 @@ export function htmlTemplate({
     <script>
       window.addEventListener('load', () => {
         window.resizeTo(${width * inputPaths.length}, ${height});
+        
+        // Synchronize camera controls between viewers
+        const viewer0 = document.getElementById('viewer0');
+        const viewer1 = document.getElementById('viewer1');
+        
+        if (viewer0 && viewer1) {
+          let isUpdating = false;
+          
+          viewer0.addEventListener('camera-change', () => {
+            if (!isUpdating) {
+              isUpdating = true;
+              viewer1.cameraOrbit = viewer0.cameraOrbit;
+              viewer1.cameraTarget = viewer0.cameraTarget;
+              viewer1.fieldOfView = viewer0.fieldOfView;
+              setTimeout(() => { isUpdating = false; }, 10);
+            }
+          });
+          
+          viewer1.addEventListener('camera-change', () => {
+            if (!isUpdating) {
+              isUpdating = true;
+              viewer0.cameraOrbit = viewer1.cameraOrbit;
+              viewer0.cameraTarget = viewer1.cameraTarget;
+              viewer0.fieldOfView = viewer1.fieldOfView;
+              setTimeout(() => { isUpdating = false; }, 10);
+            }
+          });
+        }
       });
     </script>
     <style>

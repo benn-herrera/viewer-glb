@@ -70,7 +70,6 @@ export function htmlTemplate({
   const defaultAttributesString = toHTMLAttributeString(defaultAttributes);
   const modelViewerArgsString = toHTMLAttributeString(modelViewerArgs);
 
-  // AI! 
   return `<!DOCTYPE html>
 <html>
   <head>

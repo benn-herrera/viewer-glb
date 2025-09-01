@@ -67,9 +67,16 @@ export function htmlTemplate({
 
   validateCustomAttributes(defaultAttributes, modelViewerArgs);
 
-  const defaultAttributesString = toHTMLAttributeString(defaultAttributes);
+  const input0AttributesString = toHTMLAttributeString(defaultAttributes);
+  let input1AttributesString: string
+  if (inputPaths.length > 1) {
+    defaultAttributes.src = inputPaths[1]
+    input1AttributesString = toHTMLAttributeString(defaultAttributes)
+  }
   const modelViewerArgsString = toHTMLAttributeString(modelViewerArgs);
 
+
+  // AI! 
   return `<!DOCTYPE html>
 <html>
   <head>
@@ -95,7 +102,7 @@ export function htmlTemplate({
   <body>
     <model-viewer
       camera-controls
-      ${defaultAttributesString}
+      ${input0AttributesString}
       ${modelViewerArgsString}
     />
   </body>

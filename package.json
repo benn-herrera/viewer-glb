@@ -1,10 +1,10 @@
 {
-  "name": "@shopify/screenshot-glb",
-  "version": "4.1.0",
+  "name": "@shopify/viewer-glb",
+  "version": "0.5.0",
   "publishConfig": {
     "access": "public"
   },
-  "description": "A command line utility for taking screenshots of a glTF 2.0 binary file using Google's <model-viewer> component.",
+  "description": "A utility for viewing and comparing glTF 2.0 binary files using Google's <model-viewer> component. derived from @shopify/screenshot-glb",
   "bin": {
     "screenshot-glb": "./dist/cli.js"
   },
@@ -14,11 +14,11 @@
     "lint": "prettier --check ./src",
     "lint:fix": "prettier --write ./src",
     "test": "jest",
-    "dev": "yarn build && node dist/cli.js -i ./test/fixtures/WaterBottle.glb -o output.jpg -w 1024 -h 2048 -q 1.00 -v -t 30000 -m \"exposure=0.92&camera-orbit=88.59deg 59.01deg 0.24m&camera-target=0.06m 0.04m 0m&environment-image=neutral\"",
-    "dev:version": "yarn build && node dist/cli.js -i ./test/fixtures/WaterBottle.glb -o output.jpg -@ 1.9 -w 1024 -h 2048 -q 1.00 -v -t 30000 -m \"exposure=0.92&camera-orbit=88.59deg 59.01deg 0.24m&camera-target=0.06m 0.04m 0m&environment-image=neutral\"",
-    "dev:no-version": "yarn build && node dist/cli.js -i ./test/fixtures/WaterBottle.glb -o output.jpg -@ 100000.0 -w 1024 -h 2048 -q 1.00 -v -t 30000 -m \"exposure=0.92&camera-orbit=88.59deg 59.01deg 0.24m&camera-target=0.06m 0.04m 0m&environment-image=neutral\"",
-    "dev:png": "yarn build && node dist/cli.js -i ./test/fixtures/WaterBottle.glb -o output.png -c \"rgba(0.0, 0.0, 0.0, 0.0)\" -w 1024 -h 2048 -q 1.00 -v -t 30000 -m \"exposure=0.92&camera-orbit=88.59deg 59.01deg 0.24m&camera-target=0.06m 0.04m 0m&environment-image=neutral\"",
-    "dev:local-js": "yarn build && node dist/cli.js -i ./test/fixtures/WaterBottle.glb -o output.jpg --model_viewer_path ./test/fixtures/model-viewer.js -w 1024 -h 2048 -q 1.00 -v -t 30000 -m \"exposure=0.92&camera-orbit=88.59deg 59.01deg 0.24m&camera-target=0.06m 0.04m 0m&environment-image=neutral\""
+    "dev": "yarn build && node dist/cli.js ./test/fixtures/WaterBottle.glb -w 256 -h 512 -v --exposure=1.4 --environment_map=test/fixtures/environment.jpg",
+    "dev:astro": "yarn build && node dist/cli.js ./test/fixtures/Astronaut.glb -w 256 -h 512 -v",
+    "dev:water": "yarn build && node dist/cli.js ./test/fixtures/WaterBottle.glb -w 256 -h 512 -v",
+    "dev:bgcolor": "yarn build && node dist/cli.js ./test/fixtures/WaterBottle.glb -c \"rgba(0.0, 0.0, 0.0, 0.0)\" -w 256 -h 512",
+    "dev:compare": "yarn build && node dist/cli.js ./test/fixtures/WaterBottle.glb ./test/fixtures/WaterBottle.glb -w 256 -h 512"
   },
   "author": "Stephan Leroux <stephan.leroux@shopify.com>",
   "license": "MIT",

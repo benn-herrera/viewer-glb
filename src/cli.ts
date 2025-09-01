@@ -20,12 +20,14 @@ import {logError, logUnhandledError} from './log-error';
 import {CaptureScreenShotOptions} from './types/CaptureScreenshotOptions';
 
 const argv = yargs(process.argv.slice(2)).options({
+  // AI change this yargs command line parameter to be positional
   input: {
     type: 'string',
     alias: 'i',
     describe: 'Input glTF 2.0 binary (GLB) filepath',
     demandOption: true,
   },
+  // AI eliminate this command line parameter.
   output: {
     type: 'string',
     alias: 'o',
@@ -50,6 +52,7 @@ const argv = yargs(process.argv.slice(2)).options({
     describe: 'Output image height',
     default: DEFAULT_HEIGHT,
   },
+  // AI eliminate command line parameters from here...
   image_format: {
     type: 'string',
     alias: 'f',
@@ -61,13 +64,13 @@ const argv = yargs(process.argv.slice(2)).options({
     alias: 'q',
     describe: 'Quality of the output image',
     default: DEFAULT_QUALITY,
-  },
   timeout: {
     type: 'number',
     alias: 't',
     describe: 'Timeout length in milliseconds',
     default: DEFAULT_TIMEOUT_MILLISECONDS,
   },
+  // ... to here AI
   debug: {
     type: 'boolean',
     alias: 'd',
@@ -80,6 +83,7 @@ const argv = yargs(process.argv.slice(2)).options({
     describe: 'Enable verbose logging',
     default: DEFAULT_VERBOSE_LOGGING,
   },
+  // AI eliminate these command line parameters from here...
   model_viewer_path: {
     type: 'string',
     alias: 'p',
@@ -97,6 +101,7 @@ const argv = yargs(process.argv.slice(2)).options({
     describe:
       'Set <model-viewer> attributes by passing them as url params eg. exposure=2&environment-image=neutral',
   },
+  // ... to here AI
 }).argv;
 
 (async () => {

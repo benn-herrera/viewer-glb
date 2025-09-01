@@ -8,6 +8,7 @@ import {checkFileExistsAtUrl} from './check-file-exists-at-url';
 import {getLocalUrl} from './get-local-url';
 import {FileHandler} from './file-handler';
 
+// eliminate the members from Argv that correspond to the removed yargs parameters AI!
 export interface Argv {
   input: string;
   output: string;

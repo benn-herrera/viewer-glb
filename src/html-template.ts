@@ -70,7 +70,6 @@ export function htmlTemplate({
   const defaultAttributesString = toHTMLAttributeString(defaultAttributes);
   const modelViewerArgsString = toHTMLAttributeString(modelViewerArgs);
 
-  // AI! add javascript code to resize the window to match the viewer width and height
   return `
     <!DOCTYPE html>
     <html>
@@ -78,6 +77,11 @@ export function htmlTemplate({
         <meta name="viewport" content="width=device-width, initial-scale=${devicePixelRatio}">
         <script type="module"
           src="${modelViewerUrl}">
+        </script>
+        <script>
+          window.addEventListener('load', () => {
+            window.resizeTo(${width}, ${height});
+          });
         </script>
         <style>
           body {

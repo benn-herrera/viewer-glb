@@ -76,8 +76,7 @@ const argv = yargs()
       localServerPort: localServer.port,
       fileHandler,
       argv: {
-      // AI! coerce argv._ to string[]
-      input: argv._,
+      input: argv._.map(String),
       debug: argv.debug,
       width: argv.width,
       height: argv.height,

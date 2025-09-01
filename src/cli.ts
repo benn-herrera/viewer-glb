@@ -15,13 +15,14 @@ import {
 import {logError, logUnhandledError} from './log-error';
 import {CaptureScreenShotOptions} from './types/CaptureScreenshotOptions';
 
-const argv = yargs(process.argv.slice(2)).options({
-  input: {
-    type: 'string',
-    alias: 'i',
-    describe: 'Input glTF 2.0 binary (GLB) filepath',
-    demandOption: true,
-  },
+const argv = yargs()
+  .command('$0', 'run the server', (yargs) => {
+    yargs.positional('guid', {
+      describe: 'Input glTF 2.0 binary (GLB) filepath',
+      type: 'string',
+      demand: true,
+    })
+  }).options({
   color: {
     type: 'string',
     alias: 'c',
@@ -52,7 +53,8 @@ const argv = yargs(process.argv.slice(2)).options({
     describe: 'Enable verbose logging',
     default: DEFAULT_VERBOSE_LOGGING,
   },
-}).argv;
+}).parse(process.argv.slice(2));
+
 
 (async () => {
   async function closeProgram() {
@@ -73,7 +75,14 @@ const argv = yargs(process.argv.slice(2)).options({
     options = await prepareAppOptions({
       localServerPort: localServer.port,
       fileHandler,
-      argv,
+      argv: {
+      // AI! coerce argv._ to string[]
+      input: argv._,
+      debug: argv.debug,
+      width: argv.width,
+      height: argv.height,
+      color: argv.color,
+  },
       debug: argv.debug,
     });
   } catch (error) {

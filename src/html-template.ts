@@ -6,7 +6,7 @@ export interface TemplateViewerOptions {
   modelViewerUrl: string;
   width: number;
   height: number;
-  inputs: string[];
+  inputPaths: string[];
   backgroundColor: string;
   devicePixelRatio: number;
   modelViewerArgs?: AttributesObject;
@@ -53,7 +53,7 @@ export function htmlTemplate({
   modelViewerUrl,
   width,
   height,
-  inputs,
+  inputPaths,
   backgroundColor,
   devicePixelRatio,
   modelViewerArgs,
@@ -62,7 +62,7 @@ export function htmlTemplate({
     id: 'snapshot-viewer',
     style: `background-color: ${backgroundColor};`,
     'interaction-prompt': 'none',
-    src: inputs[0],
+    src: inputPaths[0],
   };
 
   validateCustomAttributes(defaultAttributes, modelViewerArgs);

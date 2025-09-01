@@ -83,7 +83,7 @@ const argv = yargs()
       localServerPort: localServer.port,
       fileHandler,
       argv: {
-      input: argv._.map(String),
+      inputs: argv._.map(String),
       debug: argv.debug,
       width: argv.width,
       height: argv.height,

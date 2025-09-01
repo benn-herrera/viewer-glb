@@ -34,13 +34,17 @@ export class FileHandler {
     return filePath;
   }
 
-  async addFile(filePath: string): Promise<string> {
+  async addFiles(filePaths: string[]): Promise<string[]> {
+    filePaths.forEach(async (filePath) => {
     const fileName = path.basename(filePath);
     await copyFile(
       path.resolve(filePath),
       path.join(this._fileDirectory, fileName),
     );
-    return fileName;
+    });
+    return filePaths.map(
+      (p) => { return path.basename(p); }
+    )
   }
 
   async destroy() {

@@ -7,7 +7,7 @@ import {getLocalUrl} from './get-local-url';
 import {FileHandler} from './file-handler';
 
 export interface Argv {
-  input: string[];
+  inputs: string[];
   debug?: boolean;
   width: number;
   height: number;
@@ -28,17 +28,16 @@ export async function prepareAppOptions({
   argv,
 }: PrepareAppOptionsArgs): Promise<CaptureScreenShotOptions> {
   const {
-    input,
+    inputs,
     height,
     width,
     color: backgroundColor,
     debug: argvDebug,
   } = argv;
-  const model3dFileName = await fileHandler.addFile(input[0]);
-  const inputPath = getLocalUrl({
-    port: localServerPort,
-    fileName: model3dFileName,
-  });
+  const model3dFileNames = await fileHandler.addFiles(inputs);
+  const inputPaths = model3dFileNames.map((n) => {
+    return getLocalUrl({port: localServerPort, fileName: n})
+  });  
   const defaultBackgroundColor = colors.transparent;
   
   const modelViewerUrl: string = getModelViewerUrl();
@@ -57,7 +56,7 @@ export async function prepareAppOptions({
     height,
     width,
     debug: debug || argvDebug,
-    inputPath,
+    inputPaths,
     modelViewerArgs: undefined,
     devicePixelRatio: 1,
   };

@@ -4,8 +4,6 @@ Easily view 1 or compare 2 GLB models interactively.
 
 This utility is derived from [@shopify/screenshot-glb](https://github.com/Shopify/screenshot-glb)
 
-<img width="2032" height="960" alt="image" src="https://github.com/user-attachments/assets/6effe8e9-c605-4b4c-9792-13c4c2bc1998" />
-
 ## Install
 
 Use npm to install this tool:
@@ -34,6 +32,11 @@ Options:
   -d, --debug            Enable Debug Mode            [boolean] [default: false]
   -v, --verbose          Enable verbose logging       [boolean] [default: false]
 ```
+
+<img width="2032" height="960" alt="image" src="https://github.com/user-attachments/assets/6effe8e9-c605-4b4c-9792-13c4c2bc1998" />
+
+* Standard model-viewer orbit controls are used.
+* When doing side by side comparison the right model can be moved freely, the left model forces the right to an identical camera view.
 
 ## Dependencies
 

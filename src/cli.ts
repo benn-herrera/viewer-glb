@@ -6,7 +6,7 @@ import yargs from 'yargs/yargs';
 import {FileServer} from './file-server';
 import {FileHandler} from './file-handler';
 import {prepareAppOptions} from './prepare-app-options';
-import {captureScreenshot} from './show-viewer';
+import {showViewer} from './show-viewer';
 import {
   DEFAULT_WIDTH,
   DEFAULT_HEIGHT,
@@ -90,7 +90,7 @@ const argv = yargs(process.argv.slice(2))
   }
 
   try {
-    await captureScreenshot(options);
+    await showViewer(options);
   } catch (err) {
     logUnhandledError(err);
     processStatus = 1;

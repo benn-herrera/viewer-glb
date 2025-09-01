@@ -8,8 +8,7 @@ const timeDelta = (start, end) => {
   return ((end - start) / 1000).toPrecision(3);
 };
 
-// AI! rename this function to showViewer
-export async function captureScreenshot(options: CaptureScreenShotOptions) {
+export async function showViewer(options: CaptureScreenShotOptions) {
   const browserT0 = performance.now();
   const {
     modelViewerUrl,

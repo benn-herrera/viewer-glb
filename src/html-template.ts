@@ -70,36 +70,35 @@ export function htmlTemplate({
   const defaultAttributesString = toHTMLAttributeString(defaultAttributes);
   const modelViewerArgsString = toHTMLAttributeString(modelViewerArgs);
 
-  return `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=${devicePixelRatio}">
-        <script type="module"
-          src="${modelViewerUrl}">
-        </script>
-        <script>
-          window.addEventListener('load', () => {
-            window.resizeTo(${width}, ${height});
-          });
-        </script>
-        <style>
-          body {
-            margin: 0;
-          }
-          model-viewer {
-            width: ${width}px;
-            height: ${height}px;
-          }
-        </style>
-      </head>
-      <body>
-        <model-viewer
-          camera-controls
-          ${defaultAttributesString}
-          ${modelViewerArgsString}
-        />
-      </body>
-    </html>
-  `;
+  return `<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=${devicePixelRatio}">
+    <script type="module"
+      src="${modelViewerUrl}">
+    </script>
+    <script>
+      window.addEventListener('load', () => {
+        window.resizeTo(${width}, ${height});
+      });
+    </script>
+    <style>
+      body {
+        margin: 0;
+      }
+      model-viewer {
+        width: ${width}px;
+        height: ${height}px;
+      }
+    </style>
+  </head>
+  <body>
+    <model-viewer
+      camera-controls
+      ${defaultAttributesString}
+      ${modelViewerArgsString}
+    />
+  </body>
+</html>
+`;
 }

@@ -1,15 +1,17 @@
 import puppeteer from 'puppeteer';
+import {FileServer} from './file-server';
 import {performance} from 'perf_hooks';
 import {htmlTemplate, TemplateViewerOptions} from './html-template';
 import {CaptureScreenShotOptions} from './types/CaptureScreenshotOptions';
 import {FileHandler} from './file-handler';
 import {logError} from './log-error';
+import { getLocalUrl } from './get-local-url';
 
 const timeDelta = (start, end) => {
   return ((end - start) / 1000).toPrecision(3);
 };
 
-export async function showViewer(options: CaptureScreenShotOptions, fileHandler: FileHandler) {
+export async function showViewer(options: CaptureScreenShotOptions, localServer: FileServer, fileHandler: FileHandler) {
   const browserT0 = performance.now();
   const {
     modelViewerUrl,
@@ -19,13 +21,16 @@ export async function showViewer(options: CaptureScreenShotOptions, fileHandler:
     devicePixelRatio,
   } = options;
 
+  const data = htmlTemplate({...options, modelViewerUrl});
+  const indexPath = await fileHandler.createFile({fileName: "index.html", fileContent: data})
+
   const headless = false;
   const args = [
     '--no-sandbox',
     '--disable-dev-shm-usage',
     '--disable-setuid-sandbox',
     '--no-zygote',
-    '--hide-tab-bar',
+    '--app=file://' + indexPath,
   ];
 
   const browser = await puppeteer.launch({
@@ -37,38 +42,6 @@ export async function showViewer(options: CaptureScreenShotOptions, fileHandler:
     },
     headless,
   });
-
-  const page = await browser.newPage();
-
-  page.on('error', (error) => {
-    console.log(`🚨  Page Error: ${error}`);
-  });
-
-  page.on('console', async (message) => {
-    const args = await Promise.all(
-      message.args().map((arg) => arg.jsonValue()),
-    );
-
-    if (args.length) {
-      console.log(`➡️`, ...args);
-    }
-  });
-
-  const contentT0 = performance.now();
-
-  const data = htmlTemplate({...options, modelViewerUrl});
-  await page.setContent(data, {
-    waitUntil: ['domcontentloaded', 'networkidle0'],
-  });
-
-  const contentT1 = performance.now();
-
-  console.log(
-    `🗺  Viewer page loaded (${timeDelta(
-      contentT0,
-      contentT1,
-    )}s)`,
-  );
 
   console.log('🌐  Browser is open. Close the browser window to exit.');
 

@@ -87,7 +87,7 @@ const argv = yargs(process.argv.slice(2)).options({
   }
 
   try {
-    await showViewer(options, fileHandler);
+    await showViewer(options, localServer, fileHandler);
   } catch (err) {
     logUnhandledError(err);
     processStatus = 1;

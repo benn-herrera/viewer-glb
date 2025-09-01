@@ -39,9 +39,6 @@ export async function prepareAppOptions({
     port: localServerPort,
     fileName: model3dFileName,
   });
-  const outputPath = input.replace(/\.[^/.]+$/, '.png');
-  const format = 'image/png';
-  const formatExtension = 'png';
   const defaultBackgroundColor = colors.transparent;
   
   const modelViewerUrl: string = getModelViewerUrl();

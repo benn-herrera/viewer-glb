@@ -13,7 +13,7 @@ import {
   DEFAULT_VERBOSE_LOGGING,
 } from './defaults';
 import {logError, logUnhandledError} from './log-error';
-import {CaptureScreenShotOptions} from './types/CaptureScreenshotOptions';
+import {ViewerOptions} from './types/ViewerOptions';
 
 const argv = yargs()
   .command('$0', '', (yargs) => {
@@ -73,7 +73,7 @@ const argv = yargs()
 
   const fileHandler = new FileHandler();
   const localServer = new FileServer(fileHandler.fileDirectory);
-  let options: CaptureScreenShotOptions;
+  let options: ViewerOptions;
   let processStatus = 0;
 
   await localServer.start();

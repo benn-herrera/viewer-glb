@@ -1,5 +1,5 @@
 import {TemplateViewerOptions} from '../html-template';
 
-export interface CaptureScreenShotOptions extends TemplateViewerOptions {
+export interface ViewerOptions extends TemplateViewerOptions {
   debug: boolean;
 }

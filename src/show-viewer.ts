@@ -1,14 +1,14 @@
 import puppeteer from 'puppeteer';
 import {FileServer} from './file-server';
 import {htmlTemplate} from './html-template';
-import {CaptureScreenShotOptions} from './types/CaptureScreenshotOptions';
+import {ViewerOptions} from './types/ViewerOptions';
 import {FileHandler} from './file-handler';
 
 const timeDelta = (start, end) => {
   return ((end - start) / 1000).toPrecision(3);
 };
 
-export async function showViewer(options: CaptureScreenShotOptions, localServer: FileServer, fileHandler: FileHandler) {
+export async function showViewer(options: ViewerOptions, localServer: FileServer, fileHandler: FileHandler) {
   const {
     modelViewerUrl,
     width,

@@ -1,6 +1,6 @@
 
 import {colors} from './colors';
-import {CaptureScreenShotOptions} from './types/CaptureScreenshotOptions';
+import {ViewerOptions} from './types/ViewerOptions';
 import {getModelViewerUrl} from './get-model-viewer-url';
 import {checkFileExistsAtUrl} from './check-file-exists-at-url';
 import {getLocalUrl} from './get-local-url';
@@ -26,7 +26,7 @@ export async function prepareAppOptions({
   fileHandler,
   debug,
   argv,
-}: PrepareAppOptionsArgs): Promise<CaptureScreenShotOptions> {
+}: PrepareAppOptionsArgs): Promise<ViewerOptions> {
   const {
     inputs,
     height,

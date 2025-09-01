@@ -74,10 +74,16 @@ const argv = yargs()
 
 
 (async () => {
+  if (argv._.length < 1) {
+    logError("at least one model input is required.");
+    process.exit(1);
+    return;
+  }
+
   async function closeProgram() {
     await localServer.stop();
     await fileHandler.destroy();
-    console.log("all done.")
+    // console.log("all done.")
     process.exit(processStatus);
   }
 

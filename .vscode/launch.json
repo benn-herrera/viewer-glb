@@ -5,11 +5,22 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "run viewer",
+      "name": "run viewer [1]",
       "program": "${workspaceFolder}/src/cli.ts",
       "request": "launch",
       "cwd": "${workspaceFolder}/test/fixtures",
       "args": ["Astronaut.glb"],
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "node"
+    },
+   {
+      "name": "run viewer [2]",
+      "program": "${workspaceFolder}/src/cli.ts",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/test/fixtures",
+      "args": ["Astronaut.glb", "WaterBottle.glb"],
       "skipFiles": [
         "<node_internals>/**"
       ],

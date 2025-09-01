@@ -79,9 +79,9 @@ export function htmlTemplate({
     defaultAttributes.src = inputPaths[1]
     const input1AttributesString = toHTMLAttributeString(defaultAttributes);
     modelViewer1 = `<model-viewer camera-controls ${input1AttributesString} ${modelViewerArgsString}/>`;
-    tableStart = '<div style="display: flex;">'
-    tableSeparator = ''
-    tableEnd = '</div>'
+    tableStart = '<table><tr><td>'
+    tableSeparator = '</td><td>'
+    tableEnd = '</td></tr></table>'
   }
 
   return `<!DOCTYPE html>
@@ -93,7 +93,7 @@ export function htmlTemplate({
     </script>
     <script>
       window.addEventListener('load', () => {
-        window.resizeTo(${width}, ${height});
+        window.resizeTo(${width * inputPaths.length}, ${height});
       });
     </script>
     <style>

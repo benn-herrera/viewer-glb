@@ -1,23 +1,18 @@
 import puppeteer from 'puppeteer';
 import {FileServer} from './file-server';
-import {performance} from 'perf_hooks';
-import {htmlTemplate, TemplateViewerOptions} from './html-template';
+import {htmlTemplate} from './html-template';
 import {CaptureScreenShotOptions} from './types/CaptureScreenshotOptions';
 import {FileHandler} from './file-handler';
-import {logError} from './log-error';
-import { getLocalUrl } from './get-local-url';
 
 const timeDelta = (start, end) => {
   return ((end - start) / 1000).toPrecision(3);
 };
 
 export async function showViewer(options: CaptureScreenShotOptions, localServer: FileServer, fileHandler: FileHandler) {
-  const browserT0 = performance.now();
   const {
     modelViewerUrl,
     width,
     height,
-    debug,
     devicePixelRatio,
   } = options;
 
@@ -36,7 +31,7 @@ export async function showViewer(options: CaptureScreenShotOptions, localServer:
   const browser = await puppeteer.launch({
     args,
     defaultViewport: {
-      width,
+      width: width * options.inputPaths.length,
       height,
       deviceScaleFactor: devicePixelRatio,
     },

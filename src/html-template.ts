@@ -81,15 +81,11 @@ export function htmlTemplate({
       src="${modelViewerUrl}">
     </script>
     <script>
-      // let isUpdating = false;
+      window.resizeTo(${width * inputPaths.length}, ${height});
+
       let firstCall = true;
 
       function copyCameraParams(fromCam, toCam) {
-        //if (isUpdating) {
-        //  return;
-        //}
-        //isUpdating = true;
-
         if (firstCall) {
           const fromParams = fromCam.getCameraOrbit();
           const toParams = toCam.getCameraOrbit();
@@ -105,14 +101,10 @@ export function htmlTemplate({
           const phi = String(fromParams.phi);
           radius = String(String(fromParams.radius));
           toCam.cameraOrbit = theta + 'rad ' + phi + 'rad ' + radius + 'm';
-        }
-        
-        //setTimeout(() => { isUpdating = false; }, 10);        
+        }        
       }
 
-      window.addEventListener('load', () => {
-        window.resizeTo(${width * inputPaths.length}, ${height});
-        
+      window.addEventListener('load', () => {        
         // Synchronize camera controls between viewers
         const viewer0 = document.getElementById('viewer0');
         const viewer1 = document.getElementById('viewer1');
@@ -120,11 +112,7 @@ export function htmlTemplate({
         if (viewer0 && viewer1) {          
           viewer0.addEventListener('camera-change', () => {
             copyCameraParams(viewer0, viewer1);
-          });
-          
-          //viewer1.addEventListener('camera-change', () => {
-          //  copyCameraParams(viewer1, viewer0);
-          //});
+          });          
         }
       });
     </script>

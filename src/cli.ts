@@ -16,44 +16,51 @@ import {logError, logUnhandledError} from './log-error';
 import {CaptureScreenShotOptions} from './types/CaptureScreenshotOptions';
 
 const argv = yargs()
-  .command('$0', 'run the server', (yargs) => {
-    yargs.positional('guid', {
-      describe: 'Input glTF 2.0 binary (GLB) filepath',
+  .command('$0', '', (yargs) => {
+    yargs
+    .positional('input0', {
+      describe: 'glTF 2.0 binary (GLB) filepath',
       type: 'string',
       demand: true,
     })
-  }).options({
-  color: {
-    type: 'string',
-    alias: 'c',
-    describe:
-      'Output image background color (defaults to transparent, accepts HEX or RGB)',
-  },
-  width: {
-    type: 'number',
-    alias: 'w',
-    describe: 'viewer width',
-    default: DEFAULT_WIDTH,
-  },
-  height: {
-    type: 'number',
-    alias: 'h',
-    describe: 'viewer height',
-    default: DEFAULT_HEIGHT,
-  },
-  debug: {
-    type: 'boolean',
-    alias: 'd',
-    describe: 'Enable Debug Mode',
-    default: DEFAULT_DEBUG,
-  },
-  verbose: {
-    type: 'boolean',
-    alias: 'v',
-    describe: 'Enable verbose logging',
-    default: DEFAULT_VERBOSE_LOGGING,
-  },
-}).parse(process.argv.slice(2));
+    .positional('input1', {
+      describe: 'glTF 2.0 binary (GLB) filepath',
+      type: 'string',
+    })
+  })
+  .options({
+    color: {
+      type: 'string',
+      alias: 'c',
+      describe:
+        'Output image background color (defaults to transparent, accepts HEX or RGB)',
+    },
+    width: {
+      type: 'number',
+      alias: 'w',
+      describe: 'viewer width',
+      default: DEFAULT_WIDTH,
+    },
+    height: {
+      type: 'number',
+      alias: 'h',
+      describe: 'viewer height',
+      default: DEFAULT_HEIGHT,
+    },
+    debug: {
+      type: 'boolean',
+      alias: 'd',
+      describe: 'Enable Debug Mode',
+      default: DEFAULT_DEBUG,
+    },
+    verbose: {
+      type: 'boolean',
+      alias: 'v',
+      describe: 'Enable verbose logging',
+      default: DEFAULT_VERBOSE_LOGGING,
+    },
+  })
+  .parse(process.argv.slice(2));
 
 
 (async () => {

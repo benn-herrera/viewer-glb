@@ -21,7 +21,7 @@ export class FileHandler {
   private _fileDirectory: string;
 
   constructor() {
-    this._fileDirectory = mkdtempSync(path.join(os.tmpdir(), 'screenshot-glb'));
+    this._fileDirectory = mkdtempSync(path.join(os.tmpdir(), 'viewer-glb'));
   }
   
   async createFile({fileName, fileContent}: CFArgs): Promise<string> {

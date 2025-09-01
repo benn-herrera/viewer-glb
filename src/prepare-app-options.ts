@@ -7,7 +7,7 @@ import {getLocalUrl} from './get-local-url';
 import {FileHandler} from './file-handler';
 
 export interface Argv {
-  input: string;
+  input: string[];
   debug?: boolean;
   width: number;
   height: number;
@@ -34,7 +34,7 @@ export async function prepareAppOptions({
     color: backgroundColor,
     debug: argvDebug,
   } = argv;
-  const model3dFileName = await fileHandler.addFile(input);
+  const model3dFileName = await fileHandler.addFile(input[0]);
   const inputPath = getLocalUrl({
     port: localServerPort,
     fileName: model3dFileName,

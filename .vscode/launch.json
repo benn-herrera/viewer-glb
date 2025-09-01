@@ -9,7 +9,7 @@
       "program": "${workspaceFolder}/src/cli.ts",
       "request": "launch",
       "cwd": "${workspaceFolder}/test/fixtures",
-      "args": ["-i", "Astronaut.glb"],
+      "args": ["Astronaut.glb"],
       "skipFiles": [
         "<node_internals>/**"
       ],

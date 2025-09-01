@@ -24,10 +24,8 @@ export async function showViewer(options: CaptureScreenShotOptions) {
     '--disable-dev-shm-usage',
     '--disable-setuid-sandbox',
     '--no-zygote',
+    // AI! modify chrome command line options to hide the tabs
   ];
-
-  // args.push('--single-process');
-  // args.push('--start-maximized');
 
   const browser = await puppeteer.launch({
     args,
@@ -103,6 +101,4 @@ export async function showViewer(options: CaptureScreenShotOptions) {
       }
     }, 1000);
   });
-
-  console.log("browser closed.")
 }

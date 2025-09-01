@@ -42,7 +42,7 @@ export async function prepareAppOptions({
   const inputPaths = model3dFileNames.map((n) => {
     return getLocalUrl({port: localServerPort, fileName: n})
   });  
-  const defaultBackgroundColor = colors.transparent;
+  const defaultBackgroundColor = colors.gray;
   let environmentMapUrl: string = null
   if (environmentMap) {
     if (existsSync(environmentMap)) {

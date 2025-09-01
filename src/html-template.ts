@@ -48,6 +48,7 @@ export function htmlTemplate({
     'interaction-prompt': 'none',
     'min-camera-orbit': 'default default 0.25m',
     'max-camera-orbit': 'default default 10m',
+    'interpolation-decay': 1,
     exposure: Math.pow(2, exposure),
     src: inputPaths[0],
   };
@@ -80,14 +81,14 @@ export function htmlTemplate({
       src="${modelViewerUrl}">
     </script>
     <script>
-      let isUpdating = false;
+      // let isUpdating = false;
       let firstCall = true;
 
       function copyCameraParams(fromCam, toCam) {
-        if (isUpdating) {
-          return;
-        }
-        isUpdating = true;
+        //if (isUpdating) {
+        //  return;
+        //}
+        //isUpdating = true;
 
         if (firstCall) {
           const fromParams = fromCam.getCameraOrbit();
@@ -106,7 +107,7 @@ export function htmlTemplate({
           toCam.cameraOrbit = theta + 'rad ' + phi + 'rad ' + radius + 'm';
         }
         
-        setTimeout(() => { isUpdating = false; }, 10);
+        //setTimeout(() => { isUpdating = false; }, 10);        
       }
 
       window.addEventListener('load', () => {
@@ -121,9 +122,9 @@ export function htmlTemplate({
             copyCameraParams(viewer0, viewer1);
           });
           
-          viewer1.addEventListener('camera-change', () => {
-            copyCameraParams(viewer1, viewer0);
-          });
+          //viewer1.addEventListener('camera-change', () => {
+          //  copyCameraParams(viewer1, viewer0);
+          //});
         }
       });
     </script>

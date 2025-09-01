@@ -70,6 +70,7 @@ export function htmlTemplate({
   const defaultAttributesString = toHTMLAttributeString(defaultAttributes);
   const modelViewerArgsString = toHTMLAttributeString(modelViewerArgs);
 
+  // AI! add javascript code to resize the window to match the viewer width and height
   return `
     <!DOCTYPE html>
     <html>
@@ -83,7 +84,6 @@ export function htmlTemplate({
             margin: 0;
           }
           model-viewer {
-            --progress-bar-color: transparent;
             width: ${width}px;
             height: ${height}px;
           }

@@ -25,8 +25,6 @@ export async function showViewer(options: CaptureScreenShotOptions) {
     '--disable-setuid-sandbox',
     '--no-zygote',
     '--hide-tab-bar',
-    '--app',
-    `--window-size=${width},${height}`,
   ];
 
   const browser = await puppeteer.launch({

@@ -58,7 +58,7 @@ const argv = yargs(process.argv.slice(2)).options({
   async function closeProgram() {
     await localServer.stop();
     await fileHandler.destroy();
-
+    console.log("all done.")
     process.exit(processStatus);
   }
 
@@ -87,6 +87,7 @@ const argv = yargs(process.argv.slice(2)).options({
   }
 
   try {
+    // AI! refactor showViewer to accept the fileHandler as a parameter.
     await showViewer(options);
   } catch (err) {
     logUnhandledError(err);

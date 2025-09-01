@@ -87,8 +87,7 @@ const argv = yargs(process.argv.slice(2)).options({
   }
 
   try {
-    // AI! refactor showViewer to accept the fileHandler as a parameter.
-    await showViewer(options);
+    await showViewer(options, fileHandler);
   } catch (err) {
     logUnhandledError(err);
     processStatus = 1;

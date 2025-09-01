@@ -2,13 +2,14 @@ import puppeteer from 'puppeteer';
 import {performance} from 'perf_hooks';
 import {htmlTemplate, TemplateViewerOptions} from './html-template';
 import {CaptureScreenShotOptions} from './types/CaptureScreenshotOptions';
+import {FileHandler} from './file-handler';
 import {logError} from './log-error';
 
 const timeDelta = (start, end) => {
   return ((end - start) / 1000).toPrecision(3);
 };
 
-export async function showViewer(options: CaptureScreenShotOptions) {
+export async function showViewer(options: CaptureScreenShotOptions, fileHandler: FileHandler) {
   const browserT0 = performance.now();
   const {
     modelViewerUrl,

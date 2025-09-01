@@ -133,6 +133,12 @@ export async function showViewer(options: CaptureScreenShotOptions) {
     return;
   }
 
-  // AI! change code to leave browser open and block until user closes it.
-  await browser.close();
+  console.log('🌐  Browser is open. Close the browser window to exit.');
+  
+  // Wait for the browser to be closed by the user
+  await new Promise<void>((resolve) => {
+    browser.on('disconnected', () => {
+      resolve();
+    });
+  });
 }

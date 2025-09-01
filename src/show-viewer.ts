@@ -23,20 +23,16 @@ export async function showViewer(options: CaptureScreenShotOptions) {
   } = options;
   const screenshotTimeoutInSec = timeout / 1000;
 
-  const headless = !debug;
+  const headless = false;
   const args = [
     '--no-sandbox',
-    '--disable-gpu',
     '--disable-dev-shm-usage',
     '--disable-setuid-sandbox',
     '--no-zygote',
   ];
 
-  if (headless) {
-    args.push('--single-process');
-  } else {
-    args.push('--start-maximized');
-  }
+  //  args.push('--single-process');
+  // args.push('--start-maximized');
 
   const browser = await puppeteer.launch({
     args,
@@ -137,28 +133,6 @@ export async function showViewer(options: CaptureScreenShotOptions) {
     return;
   }
 
-  const screenshotT0 = performance.now();
-
-  const captureOptions = {
-    quality: quality * 100.0,
-    type: formatExtension as 'jpeg' | 'png' | 'webp',
-    path: outputPath as `${string}.jpeg` | `${string}.png` | `${string}.webp`,
-    omitBackground: true,
-  };
-
-  if (formatExtension === 'png') {
-    delete captureOptions.quality;
-  }
-
-  const screenshot = await page.screenshot(captureOptions);
-
-  const screenshotT1 = performance.now();
-
-  console.log(
-    `🖼  Captured screenshot (${timeDelta(screenshotT0, screenshotT1)}s)`,
-  );
-
+  // AI! change code to leave browser open and block until user closes it.
   await browser.close();
-
-  return screenshot;
 }

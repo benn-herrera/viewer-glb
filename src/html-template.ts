@@ -59,9 +59,10 @@ export function htmlTemplate({
   modelViewerArgs,
 }: TemplateViewerOptions): string {
   const defaultAttributes = {
-    id: 'snapshot-viewer',
     style: `background-color: ${backgroundColor};`,
     'interaction-prompt': 'none',
+    'min-camera-orbit': 'default default 0.25m',
+    'max-camera-orbit': 'default default 10m',
     src: inputPaths[0],
   };
 
@@ -92,34 +93,49 @@ export function htmlTemplate({
       src="${modelViewerUrl}">
     </script>
     <script>
+      let isUpdating = false;
+      let firstCall = true;
+
+      function copyCameraParams(fromCam, toCam) {
+        if (isUpdating) {
+          return;
+        }
+        isUpdating = true;
+
+        if (firstCall) {
+          const fromParams = fromCam.getCameraOrbit();
+          const toParams = toCam.getCameraOrbit();
+          // synchronize at higher camera radius
+          const radius = Math.max(fromParams.radius, toParams.radius);
+          fromCam.cameraOrbit = String(fromParams.theta) + 'rad ' + String(fromParams.phi) + 'rad ' + String(radius) + 'm';
+          toCam.cameraOrbit = String(toParams.theta) + 'rad ' + String(toParams.phi) + 'rad ' + String(radius) + 'm';
+          firstCall = false;
+        }
+        else {
+          const fromParams = fromCam.getCameraOrbit();
+          const theta = String(fromParams.theta);
+          const phi = String(fromParams.phi);
+          radius = String(String(fromParams.radius));
+          toCam.cameraOrbit = theta + 'rad ' + phi + 'rad ' + radius + 'm';
+        }
+        
+        setTimeout(() => { isUpdating = false; }, 10);
+      }
+
       window.addEventListener('load', () => {
         window.resizeTo(${width * inputPaths.length}, ${height});
         
         // Synchronize camera controls between viewers
         const viewer0 = document.getElementById('viewer0');
         const viewer1 = document.getElementById('viewer1');
-        
-        if (viewer0 && viewer1) {
-          let isUpdating = false;
-          
+
+        if (viewer0 && viewer1) {          
           viewer0.addEventListener('camera-change', () => {
-            if (!isUpdating) {
-              isUpdating = true;
-              viewer1.cameraOrbit = viewer0.cameraOrbit;
-              viewer1.cameraTarget = viewer0.cameraTarget;
-              viewer1.fieldOfView = viewer0.fieldOfView;
-              setTimeout(() => { isUpdating = false; }, 10);
-            }
+            copyCameraParams(viewer0, viewer1);
           });
           
           viewer1.addEventListener('camera-change', () => {
-            if (!isUpdating) {
-              isUpdating = true;
-              viewer0.cameraOrbit = viewer1.cameraOrbit;
-              viewer0.cameraTarget = viewer1.cameraTarget;
-              viewer0.fieldOfView = viewer1.fieldOfView;
-              setTimeout(() => { isUpdating = false; }, 10);
-            }
+            copyCameraParams(viewer1, viewer0);
           });
         }
       });

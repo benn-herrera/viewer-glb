@@ -73,11 +73,35 @@ export async function showViewer(options: CaptureScreenShotOptions) {
 
   console.log('🌐  Browser is open. Close the browser window to exit.');
 
-  // AI! the program hangs here even after the browser is closed. fix this.
+  // Wait for the browser to be closed by the user
   await new Promise<void>((resolve) => {
+    const checkClosed = async () => {
+      const pages = await browser.pages();
+      if (pages.length === 0) {
+        resolve();
+      }
+    };
+
     browser.on('disconnected', () => {
       resolve();
     });
+
+    browser.on('targetdestroyed', checkClosed);
+    
+    // Also check periodically in case events are missed
+    const interval = setInterval(async () => {
+      try {
+        const pages = await browser.pages();
+        if (pages.length === 0) {
+          clearInterval(interval);
+          resolve();
+        }
+      } catch (error) {
+        // Browser is likely closed
+        clearInterval(interval);
+        resolve();
+      }
+    }, 1000);
   });
 
   console.log("browser closed.")

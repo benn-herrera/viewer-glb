@@ -79,10 +79,9 @@ export function htmlTemplate({
     defaultAttributes.src = inputPaths[1]
     const input1AttributesString = toHTMLAttributeString(defaultAttributes);
     modelViewer1 = `<model-viewer camera-controls ${input1AttributesString} ${modelViewerArgsString}/>`;
-    // AI! assign these values so the two model-viewer instances are side by side
-    tableStart = 
-    tableSeparator = 
-    tableEnd = 
+    tableStart = '<div style="display: flex;">'
+    tableSeparator = ''
+    tableEnd = '</div>'
   }
 
   return `<!DOCTYPE html>

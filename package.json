@@ -1,12 +1,12 @@
 {
-  "name": "@shopify/viewer-glb",
+  "name": "viewer-glb",
   "version": "0.5.0",
   "publishConfig": {
     "access": "public"
   },
   "description": "A utility for viewing and comparing glTF 2.0 binary files using Google's <model-viewer> component. derived from @shopify/screenshot-glb",
   "bin": {
-    "screenshot-glb": "./dist/cli.js"
+    "viewer-glb": "./dist/cli.js"
   },
   "scripts": {
     "prepare": "yarn build",

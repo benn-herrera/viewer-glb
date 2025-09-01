@@ -24,7 +24,8 @@ export async function showViewer(options: CaptureScreenShotOptions) {
     '--disable-dev-shm-usage',
     '--disable-setuid-sandbox',
     '--no-zygote',
-    // AI! modify chrome command line options to hide the tabs
+    '--hide-tab-bar',
+    '--disable-features=TabStrip',
   ];
 
   const browser = await puppeteer.launch({

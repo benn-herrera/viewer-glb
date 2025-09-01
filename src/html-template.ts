@@ -69,7 +69,7 @@ export function htmlTemplate({
 
   const input0AttributesString = toHTMLAttributeString(defaultAttributes);
   const modelViewerArgsString = toHTMLAttributeString(modelViewerArgs);
-  const modelViewer0 = `<model-viewer camera-controls ${input0AttributesString} ${modelViewerArgsString}/>`;
+  const modelViewer0 = `<model-viewer id="viewer0" camera-controls ${input0AttributesString} ${modelViewerArgsString}/>`;
   let modelViewer1: string = ""
   let tableStart: string = ""
   let tableSeparator = ""
@@ -78,7 +78,10 @@ export function htmlTemplate({
   if (inputPaths.length > 1) {
     defaultAttributes.src = inputPaths[1]
     const input1AttributesString = toHTMLAttributeString(defaultAttributes);
-    modelViewer1 = `<model-viewer camera-controls ${input1AttributesString} ${modelViewerArgsString}/>`;
+    // AI when there are two model viewers the camera controls should be synchronized
+    // AI so that both viewers have the same camera-orbit attributes. changing the camera-oribt of
+    // one of the viewers should update the other one to match. AI!
+    modelViewer1 = `<model-viewer id="viewer1" camera-controls ${input1AttributesString} ${modelViewerArgsString}/>`;
     tableStart = '<table><tr><td>'
     tableSeparator = '</td><td>'
     tableEnd = '</td></tr></table>'

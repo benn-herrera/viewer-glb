@@ -19,13 +19,14 @@ export async function showViewer(options: CaptureScreenShotOptions) {
   } = options;
 
   const headless = false;
+  // AI! make the browser start with a window sized to fit the model-viewer width and height
   const args = [
     '--no-sandbox',
     '--disable-dev-shm-usage',
     '--disable-setuid-sandbox',
     '--no-zygote',
     '--hide-tab-bar',
-    '--disable-features=TabStrip',
+    '--app',
   ];
 
   const browser = await puppeteer.launch({

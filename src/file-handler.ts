@@ -1,10 +1,11 @@
 import os from 'os';
 import path from 'path';
-import {copyFile as copyFileNode, rm as rmNode, mkdtempSync} from 'fs';
+import {copyFile as copyFileNode, rm as rmNode, mkdtempSync, writeFile as writeFileNode} from 'fs';
 import {promisify} from 'util';
 
 const copyFile = promisify(copyFileNode);
 const rm = promisify(rmNode);
+const writeFile = promisify(writeFileNode);
 
 export class FileHandler {
   get fileDirectory(): string {
@@ -18,7 +19,8 @@ export class FileHandler {
   }
 
   async createFile(filePath: string, fileContents: string): Promise<void> {
-    // AI! implement
+    const fullPath = path.join(this._fileDirectory, filePath);
+    await writeFile(fullPath, fileContents, 'utf8');
   }
 
   async addFile(filePath: string): Promise<string> {

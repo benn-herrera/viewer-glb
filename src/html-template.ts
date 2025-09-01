@@ -75,8 +75,6 @@ export function htmlTemplate({
   }
   const modelViewerArgsString = toHTMLAttributeString(modelViewerArgs);
 
-
-  // AI! 
   return `<!DOCTYPE html>
 <html>
   <head>

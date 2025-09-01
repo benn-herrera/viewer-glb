@@ -96,3 +96,4 @@ output.jpg
 output.png
 test/screenshots
 .DS_Store
+.aider*

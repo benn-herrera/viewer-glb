@@ -6,7 +6,7 @@ import yargs from 'yargs/yargs';
 import {FileServer} from './file-server';
 import {FileHandler} from './file-handler';
 import {prepareAppOptions} from './prepare-app-options';
-import {captureScreenshot} from './capture-screenshot';
+import {captureScreenshot} from './show-viewer';
 import {
   DEFAULT_WIDTH,
   DEFAULT_HEIGHT,

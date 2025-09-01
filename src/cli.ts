@@ -17,9 +17,11 @@ import {logError, logUnhandledError} from './log-error';
 import {CaptureScreenShotOptions} from './types/CaptureScreenshotOptions';
 
 const argv = yargs(process.argv.slice(2))
-    // AI! fix this CLI parsing - the arguments are not being converted
   .command('$0 <input>', 'Generate screenshot from GLB file', (yargs) => {
-    yargs;
+    yargs.positional('input', {
+      type: 'string',
+      describe: 'Input glTF 2.0 binary (GLB) filepath',
+    });
   })
   .options({
   input: {
@@ -58,7 +60,7 @@ const argv = yargs(process.argv.slice(2))
     describe: 'Enable verbose logging',
     default: DEFAULT_VERBOSE_LOGGING,
   },
-}).argv;
+}).parseSync();
 
 (async () => {
   async function closeProgram() {

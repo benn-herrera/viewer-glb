@@ -17,14 +17,17 @@ import {logError, logUnhandledError} from './log-error';
 import {CaptureScreenShotOptions} from './types/CaptureScreenshotOptions';
 
 const argv = yargs(process.argv.slice(2))
+    // AI! fix this CLI parsing - the arguments are not being converted
   .command('$0 <input>', 'Generate screenshot from GLB file', (yargs) => {
-    yargs.positional('input', {
-      type: 'string',
-      describe: 'Input glTF 2.0 binary (GLB) filepath',
-      demandOption: true,
-    });
+    yargs;
   })
   .options({
+  input: {
+    type: 'string',
+    alias: 'i',
+    describe: 'Input glTF 2.0 binary (GLB) filepath',
+    demand: true,
+  },
   color: {
     type: 'string',
     alias: 'c',
@@ -34,13 +37,13 @@ const argv = yargs(process.argv.slice(2))
   width: {
     type: 'number',
     alias: 'w',
-    describe: 'Output image width',
+    describe: 'viewer width',
     default: DEFAULT_WIDTH,
   },
   height: {
     type: 'number',
     alias: 'h',
-    describe: 'Output image height',
+    describe: 'viewer height',
     default: DEFAULT_HEIGHT,
   },
   debug: {

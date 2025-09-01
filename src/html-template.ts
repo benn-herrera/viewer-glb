@@ -70,6 +70,7 @@ export function htmlTemplate({
   const defaultAttributesString = toHTMLAttributeString(defaultAttributes);
   const modelViewerArgsString = toHTMLAttributeString(modelViewerArgs);
 
+  // AI! modify this html template to include interactive orbit controls
   return `
     <!DOCTYPE html>
     <html>

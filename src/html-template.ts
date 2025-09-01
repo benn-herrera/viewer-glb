@@ -68,12 +68,22 @@ export function htmlTemplate({
   validateCustomAttributes(defaultAttributes, modelViewerArgs);
 
   const input0AttributesString = toHTMLAttributeString(defaultAttributes);
-  let input1AttributesString: string
+  const modelViewerArgsString = toHTMLAttributeString(modelViewerArgs);
+  const modelViewer0 = `<model-viewer camera-controls ${input0AttributesString} ${modelViewerArgsString}/>`;
+  let modelViewer1: string = ""
+  let tableStart: string = ""
+  let tableSeparator = ""
+  let tableEnd: string = ""
+
   if (inputPaths.length > 1) {
     defaultAttributes.src = inputPaths[1]
-    input1AttributesString = toHTMLAttributeString(defaultAttributes)
+    const input1AttributesString = toHTMLAttributeString(defaultAttributes);
+    modelViewer1 = `<model-viewer camera-controls ${input1AttributesString} ${modelViewerArgsString}/>`;
+    // AI! assign these values so the two model-viewer instances are side by side
+    tableStart = 
+    tableSeparator = 
+    tableEnd = 
   }
-  const modelViewerArgsString = toHTMLAttributeString(modelViewerArgs);
 
   return `<!DOCTYPE html>
 <html>
@@ -98,11 +108,11 @@ export function htmlTemplate({
     </style>
   </head>
   <body>
-    <model-viewer
-      camera-controls
-      ${input0AttributesString}
-      ${modelViewerArgsString}
-    />
+  ${tableStart}
+  ${modelViewer0}
+  ${tableSeparator}
+  ${modelViewer1}
+  ${tableEnd}
   </body>
 </html>
 `;

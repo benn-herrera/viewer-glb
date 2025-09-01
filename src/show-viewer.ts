@@ -15,7 +15,6 @@ export async function showViewer(options: ViewerOptions, localServer: FileServer
     height,
     devicePixelRatio,
   } = options;
-
   const data = htmlTemplate({...options, modelViewerUrl});
   const indexPath = await fileHandler.createFile({fileName: "index.html", fileContent: data})
 

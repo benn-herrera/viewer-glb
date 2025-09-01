@@ -8,6 +8,7 @@ export interface TemplateViewerOptions {
   height: number;
   inputPaths: string[];
   backgroundColor: string;
+  environmentMap: string;
   devicePixelRatio: number;
   modelViewerArgs?: AttributesObject;
 }
@@ -30,24 +31,6 @@ const errorMessagesForAttributeKey = {
   id: '`id` cannot be passed since it would cause the renderer to break',
 };
 
-function validateCustomAttributes(
-  defaultAttributes: AttributesObject,
-  customAttributes: AttributesObject | undefined,
-) {
-  if (!customAttributes) {
-    return;
-  }
-
-  Object.keys(defaultAttributes).forEach((defaultAttributeKey) => {
-    if (customAttributes[defaultAttributeKey] !== undefined) {
-      if (errorMessagesForAttributeKey[defaultAttributeKey]) {
-        throw new Error(errorMessagesForAttributeKey[defaultAttributeKey]);
-      }
-
-      throw new Error(`You cannot pass \`${defaultAttributeKey}\``);
-    }
-  });
-}
 
 export function htmlTemplate({
   modelViewerUrl,
@@ -56,7 +39,7 @@ export function htmlTemplate({
   inputPaths,
   backgroundColor,
   devicePixelRatio,
-  modelViewerArgs,
+  environmentMap,
 }: TemplateViewerOptions): string {
   const defaultAttributes = {
     style: `background-color: ${backgroundColor};`,
@@ -66,11 +49,12 @@ export function htmlTemplate({
     src: inputPaths[0],
   };
 
-  validateCustomAttributes(defaultAttributes, modelViewerArgs);
+  if (environmentMap) {
+    defaultAttributes['environment-image'] = environmentMap
+  }
 
   const input0AttributesString = toHTMLAttributeString(defaultAttributes);
-  const modelViewerArgsString = toHTMLAttributeString(modelViewerArgs);
-  const modelViewer0 = `<model-viewer id="viewer0" camera-controls ${input0AttributesString} ${modelViewerArgsString}/>`;
+  const modelViewer0 = `<model-viewer id="viewer0" camera-controls ${input0AttributesString}/>`;
   let modelViewer1: string = ""
   let tableStart: string = ""
   let tableSeparator = ""
@@ -79,7 +63,7 @@ export function htmlTemplate({
   if (inputPaths.length > 1) {
     defaultAttributes.src = inputPaths[1]
     const input1AttributesString = toHTMLAttributeString(defaultAttributes);
-    modelViewer1 = `<model-viewer id="viewer1" camera-controls ${input1AttributesString} ${modelViewerArgsString}/>`;
+    modelViewer1 = `<model-viewer id="viewer1" camera-controls ${input1AttributesString}/>`;
     tableStart = '<table><tr><td>'
     tableSeparator = '</td><td>'
     tableEnd = '</td></tr></table>'

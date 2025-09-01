@@ -5,9 +5,11 @@ import {getModelViewerUrl} from './get-model-viewer-url';
 import {checkFileExistsAtUrl} from './check-file-exists-at-url';
 import {getLocalUrl} from './get-local-url';
 import {FileHandler} from './file-handler';
+import { existsSync } from 'fs';
 
 export interface Argv {
   inputs: string[];
+  environmentMap: string,
   debug?: boolean;
   width: number;
   height: number;
@@ -29,6 +31,7 @@ export async function prepareAppOptions({
 }: PrepareAppOptionsArgs): Promise<ViewerOptions> {
   const {
     inputs,
+    environmentMap,
     height,
     width,
     color: backgroundColor,
@@ -39,6 +42,15 @@ export async function prepareAppOptions({
     return getLocalUrl({port: localServerPort, fileName: n})
   });  
   const defaultBackgroundColor = colors.transparent;
+  let environmentMapUrl: string = null
+  if (environmentMap) {
+    if (existsSync(environmentMap)) {
+      const envMapName = await fileHandler.addFiles([environmentMap]);
+      environmentMapUrl = getLocalUrl({port: localServerPort, fileName: envMapName[0]});
+    } else {
+      environmentMapUrl = environmentMap
+    }
+  }
   
   const modelViewerUrl: string = getModelViewerUrl();
 
@@ -53,11 +65,11 @@ export async function prepareAppOptions({
   return {
     modelViewerUrl,
     backgroundColor: backgroundColor || defaultBackgroundColor,
+    environmentMap: environmentMapUrl,
     height,
     width,
     debug: debug || argvDebug,
     inputPaths,
-    modelViewerArgs: undefined,
     devicePixelRatio: 1,
   };
 }

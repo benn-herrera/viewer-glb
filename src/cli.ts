@@ -33,7 +33,12 @@ const argv = yargs()
       type: 'string',
       alias: 'c',
       describe:
-        'Output image background color (defaults to transparent, accepts HEX or RGB)',
+        'background color (defaults to transparent, accepts HEX or RGB)',
+    },
+    environment_map: {
+      type: 'string',
+      alias: 'e',
+      describe: 'HDR environment map image, neutral, or legacy',
     },
     width: {
       type: 'number',
@@ -84,6 +89,7 @@ const argv = yargs()
       fileHandler,
       argv: {
       inputs: argv._.map(String),
+      environmentMap: argv.environment_map,
       debug: argv.debug,
       width: argv.width,
       height: argv.height,

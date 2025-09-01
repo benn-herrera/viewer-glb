@@ -2,26 +2,19 @@ import path from 'path';
 
 import {parseOutputPathAndFormat} from './parse-output-path-and-format';
 import {colors} from './colors';
+import {DEFAULT_QUALITY, DEFAULT_TIMEOUT_MILLISECONDS} from './defaults';
 import {CaptureScreenShotOptions} from './types/CaptureScreenshotOptions';
 import {getModelViewerUrl} from './get-model-viewer-url';
 import {checkFileExistsAtUrl} from './check-file-exists-at-url';
 import {getLocalUrl} from './get-local-url';
 import {FileHandler} from './file-handler';
 
-// eliminate the members from Argv that correspond to the removed yargs parameters AI!
 export interface Argv {
   input: string;
-  output: string;
   debug?: boolean;
-  image_format: string;
-  image_quality: number;
-  timeout: number;
   width: number;
   height: number;
   color?: string;
-  model_viewer_path?: string;
-  model_viewer_version?: string;
-  model_viewer_attributes?: string;
 }
 
 export interface PrepareAppOptionsArgs {
@@ -39,61 +32,29 @@ export async function prepareAppOptions({
 }: PrepareAppOptionsArgs): Promise<CaptureScreenShotOptions> {
   const {
     input,
-    output,
-    image_format,
-    image_quality: quality,
-    timeout,
     height,
     width,
     color: backgroundColor,
-    model_viewer_attributes,
-    model_viewer_version: modelViewerVersion,
-    model_viewer_path: modelViewerPath,
   } = argv;
   const model3dFileName = await fileHandler.addFile(input);
   const inputPath = getLocalUrl({
     port: localServerPort,
     fileName: model3dFileName,
   });
-  const [outputPath, format, formatExtension] = parseOutputPathAndFormat(
-    output,
-    image_format,
-  );
-  const defaultBackgroundColor =
-    format === 'image/jpeg' ? colors.white : colors.transparent;
-  let modelViewerArgs: {[key: string]: string} = undefined;
-
-  if (model_viewer_attributes) {
-    modelViewerArgs = {};
-
-    const params = new URLSearchParams(model_viewer_attributes);
-    params.forEach((value, key) => {
-      modelViewerArgs[key] = value;
-    });
-  }
-
-  if (modelViewerVersion && modelViewerPath) {
-    throw new Error(
-      'Please pass only Model Viewer Version or Model Viewer Path not both',
-    );
-  }
-
-  let modelViewerUrl: string = getModelViewerUrl(modelViewerVersion);
-
-  if (modelViewerPath) {
-    const modelViewerFileName = await fileHandler.addFile(modelViewerPath);
-
-    modelViewerUrl = getLocalUrl({
-      port: localServerPort,
-      fileName: modelViewerFileName,
-    });
-  }
+  const outputPath = input.replace(/\.[^/.]+$/, '.png');
+  const format = 'image/png';
+  const formatExtension = 'png';
+  const quality = DEFAULT_QUALITY;
+  const timeout = DEFAULT_TIMEOUT_MILLISECONDS;
+  const defaultBackgroundColor = colors.transparent;
+  
+  const modelViewerUrl: string = getModelViewerUrl();
 
   const modelViewerUrlExists = await checkFileExistsAtUrl(modelViewerUrl);
 
   if (!modelViewerUrlExists) {
     throw new Error(
-      `Unfortunately Model Viewer ${modelViewerVersion} cannot be used to render a screenshot`,
+      'Unfortunately Model Viewer cannot be used to render a screenshot',
     );
   }
 
@@ -108,7 +69,7 @@ export async function prepareAppOptions({
     inputPath,
     outputPath,
     formatExtension,
-    modelViewerArgs,
+    modelViewerArgs: undefined,
     devicePixelRatio: 1,
   };
 }

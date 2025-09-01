@@ -1,9 +1,5 @@
-import {TemplateRenderOptions} from '../html-template';
+import {TemplateViewerOptions} from '../html-template';
 
-export interface CaptureScreenShotOptions extends TemplateRenderOptions {
-  outputPath: string;
+export interface CaptureScreenShotOptions extends TemplateViewerOptions {
   debug: boolean;
-  quality: number;
-  timeout: number;
-  formatExtension: string;
 }

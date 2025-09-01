@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import path from 'path';
 import yargs from 'yargs/yargs';
 
 import {FileServer} from './file-server';
@@ -16,19 +15,12 @@ import {
 import {logError, logUnhandledError} from './log-error';
 import {CaptureScreenShotOptions} from './types/CaptureScreenshotOptions';
 
-const argv = yargs(process.argv.slice(2))
-  .command('$0 <input>', 'Generate screenshot from GLB file', (yargs) => {
-    yargs.positional('input', {
-      type: 'string',
-      describe: 'Input glTF 2.0 binary (GLB) filepath',
-    });
-  })
-  .options({
+const argv = yargs(process.argv.slice(2)).options({
   input: {
     type: 'string',
     alias: 'i',
     describe: 'Input glTF 2.0 binary (GLB) filepath',
-    demand: true,
+    demandOption: true,
   },
   color: {
     type: 'string',
@@ -60,7 +52,7 @@ const argv = yargs(process.argv.slice(2))
     describe: 'Enable verbose logging',
     default: DEFAULT_VERBOSE_LOGGING,
   },
-}).parseSync();
+}).argv;
 
 (async () => {
   async function closeProgram() {

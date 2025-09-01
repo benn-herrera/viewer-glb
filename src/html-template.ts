@@ -2,7 +2,7 @@ import {getModelViewerUrl} from './get-model-viewer-url';
 
 type AttributesObject = {[key: string]: any};
 
-export interface TemplateRenderOptions {
+export interface TemplateViewerOptions {
   modelViewerUrl: string;
   width: number;
   height: number;
@@ -57,7 +57,7 @@ export function htmlTemplate({
   backgroundColor,
   devicePixelRatio,
   modelViewerArgs,
-}: TemplateRenderOptions): string {
+}: TemplateViewerOptions): string {
   const defaultAttributes = {
     id: 'snapshot-viewer',
     style: `background-color: ${backgroundColor};`,

@@ -1,8 +1,5 @@
-import path from 'path';
 
-import {parseOutputPathAndFormat} from './parse-output-path-and-format';
 import {colors} from './colors';
-import {DEFAULT_QUALITY, DEFAULT_TIMEOUT_MILLISECONDS} from './defaults';
 import {CaptureScreenShotOptions} from './types/CaptureScreenshotOptions';
 import {getModelViewerUrl} from './get-model-viewer-url';
 import {checkFileExistsAtUrl} from './check-file-exists-at-url';
@@ -45,8 +42,6 @@ export async function prepareAppOptions({
   const outputPath = input.replace(/\.[^/.]+$/, '.png');
   const format = 'image/png';
   const formatExtension = 'png';
-  const quality = DEFAULT_QUALITY;
-  const timeout = DEFAULT_TIMEOUT_MILLISECONDS;
   const defaultBackgroundColor = colors.transparent;
   
   const modelViewerUrl: string = getModelViewerUrl();
@@ -62,14 +57,10 @@ export async function prepareAppOptions({
   return {
     modelViewerUrl,
     backgroundColor: backgroundColor || defaultBackgroundColor,
-    quality,
-    timeout,
     height,
     width,
     debug: debug || argvDebug,
     inputPath,
-    outputPath,
-    formatExtension,
     modelViewerArgs: undefined,
     devicePixelRatio: 1,
   };

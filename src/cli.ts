@@ -7,6 +7,7 @@ import {FileHandler} from './file-handler';
 import {prepareAppOptions} from './prepare-app-options';
 import {showViewer} from './show-viewer';
 import {
+  DEFAULT_EXPOSURE,
   DEFAULT_WIDTH,
   DEFAULT_HEIGHT,
   DEFAULT_DEBUG,
@@ -37,8 +38,12 @@ const argv = yargs()
     },
     environment_map: {
       type: 'string',
-      alias: 'e',
       describe: 'HDR environment map image, neutral, or legacy',
+    },
+    exposure: {
+      type: 'number',
+      describe: 'exposure in stops',
+      default: DEFAULT_EXPOSURE,
     },
     width: {
       type: 'number',
@@ -90,6 +95,7 @@ const argv = yargs()
       argv: {
       inputs: argv._.map(String),
       environmentMap: argv.environment_map,
+      exposure: argv.exposure,
       debug: argv.debug,
       width: argv.width,
       height: argv.height,

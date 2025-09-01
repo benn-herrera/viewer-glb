@@ -9,6 +9,7 @@ export interface TemplateViewerOptions {
   inputPaths: string[];
   backgroundColor: string;
   environmentMap: string;
+  exposure: number;
   devicePixelRatio: number;
   modelViewerArgs?: AttributesObject;
 }
@@ -40,12 +41,14 @@ export function htmlTemplate({
   backgroundColor,
   devicePixelRatio,
   environmentMap,
+  exposure,
 }: TemplateViewerOptions): string {
   const defaultAttributes = {
     style: `background-color: ${backgroundColor};`,
     'interaction-prompt': 'none',
     'min-camera-orbit': 'default default 0.25m',
     'max-camera-orbit': 'default default 10m',
+    exposure: Math.pow(2, exposure),
     src: inputPaths[0],
   };
 

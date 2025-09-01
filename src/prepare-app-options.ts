@@ -10,6 +10,7 @@ import { existsSync } from 'fs';
 export interface Argv {
   inputs: string[];
   environmentMap: string,
+  exposure: number,
   debug?: boolean;
   width: number;
   height: number;
@@ -66,6 +67,7 @@ export async function prepareAppOptions({
     modelViewerUrl,
     backgroundColor: backgroundColor || defaultBackgroundColor,
     environmentMap: environmentMapUrl,
+    exposure: argv.exposure,
     height,
     width,
     debug: debug || argvDebug,

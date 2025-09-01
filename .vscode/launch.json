@@ -3,7 +3,7 @@
   // Hover to view descriptions of existing attributes.
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
-  "configurations": [
+  "configurations": [    
     {
       "name": "run viewer [1]",
       "program": "${workspaceFolder}/src/cli.ts",
@@ -21,6 +21,17 @@
       "request": "launch",
       "cwd": "${workspaceFolder}/test/fixtures",
       "args": ["Astronaut.glb", "WaterBottle.glb"],
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "node"
+    },
+    {
+      "name": "run viewer [2] env",
+      "program": "${workspaceFolder}/src/cli.ts",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/test/fixtures",
+      "args": ["Astronaut.glb", "Astronaut.glb", "--environment_map=environment.jpg", "--exposure=1.4"],
       "skipFiles": [
         "<node_internals>/**"
       ],

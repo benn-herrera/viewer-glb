@@ -35,6 +35,7 @@ export async function prepareAppOptions({
     height,
     width,
     color: backgroundColor,
+    debug: argvDebug,
   } = argv;
   const model3dFileName = await fileHandler.addFile(input);
   const inputPath = getLocalUrl({
@@ -65,7 +66,7 @@ export async function prepareAppOptions({
     timeout,
     height,
     width,
-    debug,
+    debug: debug || argvDebug,
     inputPath,
     outputPath,
     formatExtension,

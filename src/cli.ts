@@ -20,10 +20,12 @@ import {logError, logUnhandledError} from './log-error';
 import {CaptureScreenShotOptions} from './types/CaptureScreenshotOptions';
 
 const argv = yargs(process.argv.slice(2))
-  .positional('input', {
-    type: 'string',
-    describe: 'Input glTF 2.0 binary (GLB) filepath',
-    demandOption: true,
+  .command('$0 <input>', 'Generate screenshot from GLB file', (yargs) => {
+    yargs.positional('input', {
+      type: 'string',
+      describe: 'Input glTF 2.0 binary (GLB) filepath',
+      demandOption: true,
+    });
   })
   .options({
   color: {
@@ -78,6 +80,7 @@ const argv = yargs(process.argv.slice(2))
       localServerPort: localServer.port,
       fileHandler,
       argv,
+      debug: argv.debug,
     });
   } catch (error) {
     logError(error);

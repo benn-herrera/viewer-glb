@@ -10,6 +10,7 @@ import {captureScreenshot} from './capture-screenshot';
 import {
   DEFAULT_WIDTH,
   DEFAULT_HEIGHT,
+  // AI! eliminate these unused globals here and
   DEFAULT_FORMAT,
   DEFAULT_QUALITY,
   DEFAULT_TIMEOUT_MILLISECONDS,

@@ -73,11 +73,8 @@ export function htmlTemplate({
     defaultAttributes.src = inputPaths[1];
     const input1AttributesString = toHTMLAttributeString(defaultAttributes);
     modelViewer1 = `<model-viewer id="viewer1" camera-controls ${input1AttributesString}/>`;
-    // AI replace the div with id "diff" with an element that shows a live image diff of the rendered views from the model-viewer
-    // AI tags with ids "viewer0" and "viewer1".
-    // it is important that the original model views are not changed or obstructed. AI!
     tableStart = `<table><thead><tr><th>${fileStems[0]}</th><th>Diff</th><th>${fileStems[1]}</th></tr></thead><tbody><tr><td>`;
-    tableSeparator = '</td><td><div id="diff" class="diffView"></td><td>';
+    tableSeparator = '</td><td><canvas id="diff" class="diffView"></canvas></td><td>';
   }
 
   return `<!DOCTYPE html>
@@ -119,6 +116,80 @@ export function htmlTemplate({
           viewer0.addEventListener('camera-change', () => {
             copyCameraParams(viewer0, viewer1);
           });          
+        }
+
+        // Create image diff if we have two viewers
+        if (viewer0 && viewer1) {
+          const diffCanvas = document.getElementById('diff');
+          if (diffCanvas) {
+            const ctx = diffCanvas.getContext('2d');
+            if (ctx) {
+              // Set canvas dimensions
+              diffCanvas.width = ${width};
+              diffCanvas.height = ${height};
+              
+              function updateDiff() {
+                // Get the rendered images from both viewers
+                viewer0.toBlob((blob0) => {
+                  viewer1.toBlob((blob1) => {
+                    if (blob0 && blob1) {
+                      const img0 = new Image();
+                      const img1 = new Image();
+                      
+                      img0.onload = () => {
+                        img1.onload = () => {
+                          // Clear canvas
+                          ctx.clearRect(0, 0, diffCanvas.width, diffCanvas.height);
+                          
+                          // Draw first image
+                          ctx.drawImage(img0, 0, 0);
+                          
+                          // Get image data for both images
+                          const imageData0 = ctx.getImageData(0, 0, diffCanvas.width, diffCanvas.height);
+                          const data0 = imageData0.data;
+                          
+                          ctx.drawImage(img1, 0, 0);
+                          const imageData1 = ctx.getImageData(0, 0, diffCanvas.width, diffCanvas.height);
+                          const data1 = imageData1.data;
+                          
+                          // Create diff image data
+                          const diffImageData = ctx.createImageData(diffCanvas.width, diffCanvas.height);
+                          const diffData = diffImageData.data;
+                          
+                          // Calculate diff (simple absolute difference)
+                          for (let i = 0; i < data0.length; i += 4) {
+                            diffData[i] = Math.abs(data0[i] - data1[i]);     // Red
+                            diffData[i + 1] = Math.abs(data0[i + 1] - data1[i + 1]); // Green
+                            diffData[i + 2] = Math.abs(data0[i + 2] - data1[i + 2]); // Blue
+                            diffData[i + 3] = 255; // Alpha
+                          }
+                          
+                          // Draw diff image
+                          ctx.putImageData(diffImageData, 0, 0);
+                        };
+                        img1.src = URL.createObjectURL(blob1);
+                      };
+                      img0.src = URL.createObjectURL(blob0);
+                    }
+                  });
+                });
+              }
+              
+              // Update diff when either viewer finishes loading
+              viewer0.addEventListener('load', updateDiff);
+              viewer1.addEventListener('load', updateDiff);
+              
+              // Update diff on camera changes (after a short delay to allow rendering)
+              let diffTimeout;
+              const scheduleDiffUpdate = () => {
+                clearTimeout(diffTimeout);
+                diffTimeout = setTimeout(updateDiff, 100);
+              };
+              
+              viewer0.addEventListener('camera-change', scheduleDiffUpdate);
+              viewer1.addEventListener('camera-change', scheduleDiffUpdate);
+            }
+          }
         }
       });
     </script>

@@ -1,4 +1,4 @@
-# 📸 viewer-glb
+# 🎥: viewer-glb
 
 Easily view 1 or compare 2 GLB models interactively.
 
@@ -32,8 +32,7 @@ Options:
   -d, --debug            Enable Debug Mode            [boolean] [default: false]
   -v, --verbose          Enable verbose logging       [boolean] [default: false]
 ```
-
-<img width="2032" height="960" alt="image" src="https://github.com/user-attachments/assets/6effe8e9-c605-4b4c-9792-13c4c2bc1998" />
+<img width="2272" height="1348" alt="image" src="https://github.com/user-attachments/assets/06e39776-bb56-43f9-819b-bdcbfa925d08" />
 
 * Standard model-viewer orbit controls are used.
 * When doing side by side comparison the right model can be moved freely, the left model forces the right to an identical camera view.

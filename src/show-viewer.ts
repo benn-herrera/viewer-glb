@@ -8,17 +8,19 @@ const timeDelta = (start, end) => {
   return ((end - start) / 1000).toPrecision(3);
 };
 
-export async function showViewer(options: ViewerOptions, localServer: FileServer, fileHandler: FileHandler) {
-  const {
-    modelViewerUrl,
-    width,
-    height,
-    devicePixelRatio,
-  } = options;
-  const winWidth = width * options.inputPaths.length
-  const winHeight = (height + 50);
+export async function showViewer(
+  options: ViewerOptions,
+  localServer: FileServer,
+  fileHandler: FileHandler,
+) {
+  const {modelViewerUrl, width, height, devicePixelRatio} = options;
+  const winWidth = width * options.inputPaths.length;
+  const winHeight = height + 50;
   const data = htmlTemplate({...options, modelViewerUrl});
-  const indexPath = await fileHandler.createFile({fileName: "index.html", fileContent: data})
+  const indexPath = await fileHandler.createFile({
+    fileName: 'index.html',
+    fileContent: data,
+  });
 
   const headless = false;
   const args = [
@@ -56,7 +58,7 @@ export async function showViewer(options: ViewerOptions, localServer: FileServer
     });
 
     browser.on('targetdestroyed', checkClosed);
-    
+
     // Also check periodically in case events are missed
     const interval = setInterval(async () => {
       try {

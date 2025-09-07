@@ -19,15 +19,15 @@ import {ViewerOptions} from './types/ViewerOptions';
 const argv = yargs()
   .command('$0', '', (yargs) => {
     yargs
-    .positional('input0', {
-      describe: 'glTF 2.0 binary (GLB) filepath',
-      type: 'string',
-      demand: true,
-    })
-    .positional('input1', {
-      describe: 'glTF 2.0 binary (GLB) filepath',
-      type: 'string',
-    })
+      .positional('input0', {
+        describe: 'glTF 2.0 binary (GLB) filepath',
+        type: 'string',
+        demand: true,
+      })
+      .positional('input1', {
+        describe: 'glTF 2.0 binary (GLB) filepath',
+        type: 'string',
+      });
   })
   .options({
     color: {
@@ -72,10 +72,9 @@ const argv = yargs()
   })
   .parse(process.argv.slice(2));
 
-
 (async () => {
   if (argv._.length < 1) {
-    logError("at least one model input is required.");
+    logError('at least one model input is required.');
     process.exit(1);
     return;
   }
@@ -99,14 +98,14 @@ const argv = yargs()
       localServerPort: localServer.port,
       fileHandler,
       argv: {
-      inputs: argv._.map(String),
-      environmentMap: argv.environment_map,
-      exposure: argv.exposure,
-      debug: argv.debug,
-      width: argv.width,
-      height: argv.height,
-      color: argv.color,
-  },
+        inputs: argv._.map(String),
+        environmentMap: argv.environment_map,
+        exposure: argv.exposure,
+        debug: argv.debug,
+        width: argv.width,
+        height: argv.height,
+        color: argv.color,
+      },
       debug: argv.debug,
     });
   } catch (error) {

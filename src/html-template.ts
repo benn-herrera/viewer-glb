@@ -32,7 +32,6 @@ const errorMessagesForAttributeKey = {
   id: '`id` cannot be passed since it would cause the renderer to break',
 };
 
-
 export function htmlTemplate({
   modelViewerUrl,
   width,
@@ -54,28 +53,28 @@ export function htmlTemplate({
   };
 
   if (environmentMap) {
-    defaultAttributes['environment-image'] = environmentMap
+    defaultAttributes['environment-image'] = environmentMap;
   }
 
   // Extract file stems for headers
-  const fileStems = inputPaths.map(path => {
+  const fileStems = inputPaths.map((path) => {
     const fileName = path.split('/').pop();
     return fileName.split('.').slice(0, -1).join('.');
   });
 
   const input0AttributesString = toHTMLAttributeString(defaultAttributes);
   const modelViewer0 = `<model-viewer id="viewer0" camera-controls ${input0AttributesString}/>`;
-  let modelViewer1: string = ""
-  let tableStart: string = `<table><thead><tr><th>${fileStems[0]}</th></tr></thead><tbody><tr><td>`
-  let tableSeparator = ""
-  let tableEnd: string = "</td></tr></tbody></table>"
+  let modelViewer1: string = '';
+  let tableStart: string = `<table><thead><tr><th>${fileStems[0]}</th></tr></thead><tbody><tr><td>`;
+  let tableSeparator = '';
+  let tableEnd: string = '</td></tr></tbody></table>';
 
   if (inputPaths.length > 1) {
-    defaultAttributes.src = inputPaths[1]
+    defaultAttributes.src = inputPaths[1];
     const input1AttributesString = toHTMLAttributeString(defaultAttributes);
-    modelViewer1 = `<model-viewer id="viewer1" camera-controls ${input1AttributesString}/>`;    
-    tableStart = `<table><thead><tr><th>${fileStems[0]}</th><th>${fileStems[1]}</th></tr></thead><tbody><tr><td>`
-    tableSeparator = '</td><td>'
+    modelViewer1 = `<model-viewer id="viewer1" camera-controls ${input1AttributesString}/>`;
+    tableStart = `<table><thead><tr><th>${fileStems[0]}</th><th>${fileStems[1]}</th></tr></thead><tbody><tr><td>`;
+    tableSeparator = '</td><td>';
   }
 
   return `<!DOCTYPE html>

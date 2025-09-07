@@ -1,16 +1,15 @@
-
 import {colors} from './colors';
 import {ViewerOptions} from './types/ViewerOptions';
 import {getModelViewerUrl} from './get-model-viewer-url';
 import {checkFileExistsAtUrl} from './check-file-exists-at-url';
 import {getLocalUrl} from './get-local-url';
 import {FileHandler} from './file-handler';
-import { existsSync } from 'fs';
+import {existsSync} from 'fs';
 
 export interface Argv {
   inputs: string[];
-  environmentMap: string,
-  exposure: number,
+  environmentMap: string;
+  exposure: number;
   debug?: boolean;
   width: number;
   height: number;
@@ -40,19 +39,22 @@ export async function prepareAppOptions({
   } = argv;
   const model3dFileNames = await fileHandler.addFiles(inputs);
   const inputPaths = model3dFileNames.map((n) => {
-    return getLocalUrl({port: localServerPort, fileName: n})
-  });  
+    return getLocalUrl({port: localServerPort, fileName: n});
+  });
   const defaultBackgroundColor = colors.gray;
-  let environmentMapUrl: string = null
+  let environmentMapUrl: string = null;
   if (environmentMap) {
     if (existsSync(environmentMap)) {
       const envMapName = await fileHandler.addFiles([environmentMap]);
-      environmentMapUrl = getLocalUrl({port: localServerPort, fileName: envMapName[0]});
+      environmentMapUrl = getLocalUrl({
+        port: localServerPort,
+        fileName: envMapName[0],
+      });
     } else {
-      environmentMapUrl = environmentMap
+      environmentMapUrl = environmentMap;
     }
   }
-  
+
   const modelViewerUrl: string = getModelViewerUrl();
 
   const modelViewerUrlExists = await checkFileExistsAtUrl(modelViewerUrl);

@@ -1,6 +1,12 @@
 import os from 'os';
 import path from 'path';
-import {copyFile as copyFileNode, rm as rmNode, mkdtempSync, readFile as readFileNode, writeFile as writeFileNode} from 'fs';
+import {
+  copyFile as copyFileNode,
+  rm as rmNode,
+  mkdtempSync,
+  readFile as readFileNode,
+  writeFile as writeFileNode,
+} from 'fs';
 import {promisify} from 'util';
 import * as fs from 'fs';
 
@@ -23,28 +29,24 @@ export class FileHandler {
   constructor() {
     this._fileDirectory = mkdtempSync(path.join(os.tmpdir(), 'viewer-glb'));
   }
-  
+
   async createFile({fileName, fileContent}: CFArgs): Promise<string> {
     const filePath = path.join(this._fileDirectory, fileName);
-    await writeFile(
-      filePath,
-      fileContent, 
-      'utf-8',
-    );
+    await writeFile(filePath, fileContent, 'utf-8');
     return filePath;
   }
 
   async addFiles(filePaths: string[]): Promise<string[]> {
     filePaths.forEach(async (filePath) => {
-    const fileName = path.basename(filePath);
-    await copyFile(
-      path.resolve(filePath),
-      path.join(this._fileDirectory, fileName),
-    );
+      const fileName = path.basename(filePath);
+      await copyFile(
+        path.resolve(filePath),
+        path.join(this._fileDirectory, fileName),
+      );
     });
-    return filePaths.map(
-      (p) => { return path.basename(p); }
-    )
+    return filePaths.map((p) => {
+      return path.basename(p);
+    });
   }
 
   async destroy() {

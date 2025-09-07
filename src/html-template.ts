@@ -57,6 +57,12 @@ export function htmlTemplate({
     defaultAttributes['environment-image'] = environmentMap
   }
 
+  // Extract file stems for headers
+  const fileStems = inputPaths.map(path => {
+    const fileName = path.split('/').pop();
+    return fileName.split('.').slice(0, -1).join('.');
+  });
+
   const input0AttributesString = toHTMLAttributeString(defaultAttributes);
   const modelViewer0 = `<model-viewer id="viewer0" camera-controls ${input0AttributesString}/>`;
   let modelViewer1: string = ""
@@ -67,12 +73,12 @@ export function htmlTemplate({
   if (inputPaths.length > 1) {
     defaultAttributes.src = inputPaths[1]
     const input1AttributesString = toHTMLAttributeString(defaultAttributes);
-    // AI add text headers to each table column with the names of the viewed models.
-    // AI! the name should just be the file stem - no absolute path or extension.
     modelViewer1 = `<model-viewer id="viewer1" camera-controls ${input1AttributesString}/>`;
-    tableStart = '<table><tr><td>'
-    tableSeparator = '</td><td>'
+    tableStart = `<table><tr><td><h2>${fileStems[0]}</h2>`
+    tableSeparator = `</td><td><h2>${fileStems[1]}</h2>`
     tableEnd = '</td></tr></table>'
+  } else {
+    tableStart = `<h2>${fileStems[0]}</h2>`
   }
 
   return `<!DOCTYPE html>
@@ -125,6 +131,10 @@ export function htmlTemplate({
       model-viewer {
         width: ${width}px;
         height: ${height}px;
+      }
+      h2 {
+        text-align: center;
+        margin: 10px 0;
       }
     </style>
   </head>

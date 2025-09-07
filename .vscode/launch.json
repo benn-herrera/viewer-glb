@@ -7,6 +7,7 @@
     {
       "name": "run viewer [1]",
       "program": "${workspaceFolder}/src/cli.ts",
+      "preLaunchTask": "tsc: build - tsconfig.json",
       "request": "launch",
       "cwd": "${workspaceFolder}/test/fixtures",
       "args": ["Astronaut.glb"],
@@ -18,6 +19,7 @@
    {
       "name": "run viewer [2]",
       "program": "${workspaceFolder}/src/cli.ts",
+      "preLaunchTask": "tsc: build - tsconfig.json",
       "request": "launch",
       "cwd": "${workspaceFolder}/test/fixtures",
       "args": ["Astronaut.glb", "WaterBottle.glb"],
@@ -29,6 +31,7 @@
     {
       "name": "run viewer [2] env",
       "program": "${workspaceFolder}/src/cli.ts",
+      "preLaunchTask": "tsc: build - tsconfig.json",
       "request": "launch",
       "cwd": "${workspaceFolder}/test/fixtures",
       "args": ["Astronaut.glb", "Astronaut.glb", "--environment_map=environment.jpg", "--exposure=1.4"],

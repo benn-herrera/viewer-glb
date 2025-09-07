@@ -20,7 +20,7 @@
     "dev:bgcolor": "yarn build && node dist/cli.js ./test/fixtures/WaterBottle.glb -c \"rgba(0.0, 0.0, 0.0, 0.0)\" -w 256 -h 512",
     "dev:compare": "yarn build && node dist/cli.js ./test/fixtures/WaterBottle.glb ./test/fixtures/WaterBottle.glb -w 256 -h 512"
   },
-  "author": "Stephan Leroux <stephan.leroux@shopify.com>",
+  "author": "Benn Herrera <benn.herrera@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "@shopify/prettier-config": "^1.1.4",

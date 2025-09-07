@@ -67,6 +67,8 @@ export function htmlTemplate({
   if (inputPaths.length > 1) {
     defaultAttributes.src = inputPaths[1]
     const input1AttributesString = toHTMLAttributeString(defaultAttributes);
+    // AI add text headers to each table column with the names of the viewed models.
+    // AI! the name should just be the file stem - no absolute path or extension.
     modelViewer1 = `<model-viewer id="viewer1" camera-controls ${input1AttributesString}/>`;
     tableStart = '<table><tr><td>'
     tableSeparator = '</td><td>'

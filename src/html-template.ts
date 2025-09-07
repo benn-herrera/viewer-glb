@@ -73,6 +73,9 @@ export function htmlTemplate({
     defaultAttributes.src = inputPaths[1];
     const input1AttributesString = toHTMLAttributeString(defaultAttributes);
     modelViewer1 = `<model-viewer id="viewer1" camera-controls ${input1AttributesString}/>`;
+    // AI replace the div with id "diff" with an element that shows a live image diff of the rendered views from the model-viewer
+    // AI tags with ids "viewer0" and "viewer1".
+    // it is important that the original model views are not changed or obstructed. AI!
     tableStart = `<table><thead><tr><th>${fileStems[0]}</th><th>Diff</th><th>${fileStems[1]}</th></tr></thead><tbody><tr><td>`;
     tableSeparator = '</td><td><div id="diff" class="diffView"></td><td>';
   }

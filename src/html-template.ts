@@ -102,9 +102,82 @@ export function htmlTemplate({
           const fromParams = fromCam.getCameraOrbit();
           const theta = String(fromParams.theta);
           const phi = String(fromParams.phi);
-          radius = String(String(fromParams.radius));
+          const radius = String(fromParams.radius);
           toCam.cameraOrbit = theta + 'rad ' + phi + 'rad ' + radius + 'm';
         }        
+      }
+
+      // Capture viewer content to canvas
+      function captureViewerToCanvas(viewer) {
+        return new Promise((resolve) => {
+          const canvas = document.createElement('canvas');
+          canvas.width = ${width};
+          canvas.height = ${height};
+          const ctx = canvas.getContext('2d');
+          
+          // Get the internal renderer canvas from model-viewer
+          const rendererCanvas = viewer.shadowRoot.querySelector('canvas');
+          if (rendererCanvas) {
+            ctx.drawImage(rendererCanvas, 0, 0);
+            resolve(canvas);
+          } else {
+            // Fallback if we can't access the internal canvas
+            resolve(null);
+          }
+        });
+      }
+
+      // Create diff image from two canvases
+      function createDiffImage(canvas1, canvas2, diffCanvas) {
+        if (!canvas1 || !canvas2) return;
+        
+        const ctx = diffCanvas.getContext('2d');
+        if (!ctx) return;
+        
+        diffCanvas.width = ${width};
+        diffCanvas.height = ${height};
+        
+        // Draw first image
+        ctx.drawImage(canvas1, 0, 0);
+        const imageData1 = ctx.getImageData(0, 0, diffCanvas.width, diffCanvas.height);
+        const data1 = imageData1.data;
+        
+        // Draw second image
+        ctx.drawImage(canvas2, 0, 0);
+        const imageData2 = ctx.getImageData(0, 0, diffCanvas.width, diffCanvas.height);
+        const data2 = imageData2.data;
+        
+        // Create diff image data
+        const diffImageData = ctx.createImageData(diffCanvas.width, diffCanvas.height);
+        const diffData = diffImageData.data;
+        
+        // Calculate diff with color coding
+        for (let i = 0; i < data1.length; i += 4) {
+          const r1 = data1[i];
+          const g1 = data1[i + 1];
+          const b1 = data1[i + 2];
+          
+          const r2 = data2[i];
+          const g2 = data2[i + 1];
+          const b2 = data2[i + 2];
+          
+          // Calculate absolute differences
+          const diffR = Math.abs(r1 - r2);
+          const diffG = Math.abs(g1 - g2);
+          const diffB = Math.abs(b1 - b2);
+          
+          // Color code the differences:
+          // - Red channel shows what's unique to first image
+          // - Blue channel shows what's unique to second image
+          // - Green channel shows similarities
+          diffData[i] = diffR;     // Red difference
+          diffData[i + 1] = 0;     // No green difference highlighting
+          diffData[i + 2] = diffB; // Blue difference
+          diffData[i + 3] = 255;   // Alpha
+        }
+        
+        // Draw diff image
+        ctx.putImageData(diffImageData, 0, 0);
       }
 
       window.addEventListener('load', () => {        
@@ -122,73 +195,28 @@ export function htmlTemplate({
         if (viewer0 && viewer1) {
           const diffCanvas = document.getElementById('diff');
           if (diffCanvas) {
-            const ctx = diffCanvas.getContext('2d');
-            if (ctx) {
-              // Set canvas dimensions
-              diffCanvas.width = ${width};
-              diffCanvas.height = ${height};
-              
-              function updateDiff() {
-                // Get the rendered images from both viewers
-                viewer0.toBlob((blob0) => {
-                  viewer1.toBlob((blob1) => {
-                    if (blob0 && blob1) {
-                      const img0 = new Image();
-                      const img1 = new Image();
-                      
-                      img0.onload = () => {
-                        img1.onload = () => {
-                          // Clear canvas
-                          ctx.clearRect(0, 0, diffCanvas.width, diffCanvas.height);
-                          
-                          // Draw first image
-                          ctx.drawImage(img0, 0, 0);
-                          
-                          // Get image data for both images
-                          const imageData0 = ctx.getImageData(0, 0, diffCanvas.width, diffCanvas.height);
-                          const data0 = imageData0.data;
-                          
-                          ctx.drawImage(img1, 0, 0);
-                          const imageData1 = ctx.getImageData(0, 0, diffCanvas.width, diffCanvas.height);
-                          const data1 = imageData1.data;
-                          
-                          // Create diff image data
-                          const diffImageData = ctx.createImageData(diffCanvas.width, diffCanvas.height);
-                          const diffData = diffImageData.data;
-                          
-                          // Calculate diff (simple absolute difference)
-                          for (let i = 0; i < data0.length; i += 4) {
-                            diffData[i] = Math.abs(data0[i] - data1[i]);     // Red
-                            diffData[i + 1] = Math.abs(data0[i + 1] - data1[i + 1]); // Green
-                            diffData[i + 2] = Math.abs(data0[i + 2] - data1[i + 2]); // Blue
-                            diffData[i + 3] = 255; // Alpha
-                          }
-                          
-                          // Draw diff image
-                          ctx.putImageData(diffImageData, 0, 0);
-                        };
-                        img1.src = URL.createObjectURL(blob1);
-                      };
-                      img0.src = URL.createObjectURL(blob0);
-                    }
-                  });
-                });
-              }
-              
-              // Update diff when either viewer finishes loading
-              viewer0.addEventListener('load', updateDiff);
-              viewer1.addEventListener('load', updateDiff);
-              
-              // Update diff on camera changes (after a short delay to allow rendering)
-              let diffTimeout;
-              const scheduleDiffUpdate = () => {
-                clearTimeout(diffTimeout);
-                diffTimeout = setTimeout(updateDiff, 100);
-              };
-              
-              viewer0.addEventListener('camera-change', scheduleDiffUpdate);
-              viewer1.addEventListener('camera-change', scheduleDiffUpdate);
+            function updateDiff() {
+              Promise.all([
+                captureViewerToCanvas(viewer0),
+                captureViewerToCanvas(viewer1)
+              ]).then(([canvas1, canvas2]) => {
+                createDiffImage(canvas1, canvas2, diffCanvas);
+              });
             }
+            
+            // Update diff when either viewer finishes loading
+            viewer0.addEventListener('load', updateDiff);
+            viewer1.addEventListener('load', updateDiff);
+            
+            // Update diff on camera changes (after a short delay to allow rendering)
+            let diffTimeout;
+            const scheduleDiffUpdate = () => {
+              clearTimeout(diffTimeout);
+              diffTimeout = setTimeout(updateDiff, 200);
+            };
+            
+            viewer0.addEventListener('camera-change', scheduleDiffUpdate);
+            viewer1.addEventListener('camera-change', scheduleDiffUpdate);
           }
         }
       });
@@ -204,10 +232,19 @@ export function htmlTemplate({
       .diffView {
         width: ${width}px;
         height: ${height}px;
+        border: 1px solid #ccc;
       }
       h2 {
         text-align: center;
         margin: 10px 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th {
+        text-align: center;
+        padding: 10px;
       }
     </style>
   </head>

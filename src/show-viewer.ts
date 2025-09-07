@@ -15,6 +15,8 @@ export async function showViewer(options: ViewerOptions, localServer: FileServer
     height,
     devicePixelRatio,
   } = options;
+  const winWidth = width * options.inputPaths.length
+  const winHeight = (height + 50);
   const data = htmlTemplate({...options, modelViewerUrl});
   const indexPath = await fileHandler.createFile({fileName: "index.html", fileContent: data})
 
@@ -24,14 +26,15 @@ export async function showViewer(options: ViewerOptions, localServer: FileServer
     '--disable-dev-shm-usage',
     '--disable-setuid-sandbox',
     '--no-zygote',
+    `--window-size=${winWidth},${winHeight}`,
     '--app=file://' + indexPath,
   ];
 
   const browser = await puppeteer.launch({
     args,
     defaultViewport: {
-      width: width * options.inputPaths.length,
-      height,
+      width: winWidth,
+      height: winHeight,
       deviceScaleFactor: devicePixelRatio,
     },
     headless,

@@ -66,31 +66,27 @@ export function htmlTemplate({
   const input0AttributesString = toHTMLAttributeString(defaultAttributes);
   const modelViewer0 = `<model-viewer id="viewer0" camera-controls ${input0AttributesString}/>`;
   let modelViewer1: string = ""
-  let tableStart: string = ""
+  let tableStart: string = `<table><thead><tr><th>${fileStems[0]}</th></tr></thead><tbody><tr><td>`
   let tableSeparator = ""
-  let tableEnd: string = ""
+  let tableEnd: string = "</td></tr></tbody></table>"
 
   if (inputPaths.length > 1) {
     defaultAttributes.src = inputPaths[1]
     const input1AttributesString = toHTMLAttributeString(defaultAttributes);
-    modelViewer1 = `<model-viewer id="viewer1" camera-controls ${input1AttributesString}/>`;
-    tableStart = `<table><tr><td><h2>${fileStems[0]}</h2>`
-    tableSeparator = `</td><td><h2>${fileStems[1]}</h2>`
-    tableEnd = '</td></tr></table>'
-  } else {
-    tableStart = `<h2>${fileStems[0]}</h2>`
+    modelViewer1 = `<model-viewer id="viewer1" camera-controls ${input1AttributesString}/>`;    
+    tableStart = `<table><thead><tr><th>${fileStems[0]}</th><th>${fileStems[1]}</th></tr></thead><tbody><tr><td>`
+    tableSeparator = '</td><td>'
   }
 
   return `<!DOCTYPE html>
 <html>
   <head>
+    <title>Viewer-GLB</title>
     <meta name="viewport" content="width=device-width, initial-scale=${devicePixelRatio}">
     <script type="module"
       src="${modelViewerUrl}">
     </script>
     <script>
-      window.resizeTo(${width * inputPaths.length}, ${height});
-
       let firstCall = true;
 
       function copyCameraParams(fromCam, toCam) {

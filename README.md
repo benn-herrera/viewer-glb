@@ -1,4 +1,4 @@
-# 🎥: viewer-glb
+# 👀 viewer-glb
 
 Easily view 1 or compare 2 GLB models interactively.
 

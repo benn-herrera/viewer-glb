@@ -73,8 +73,8 @@ export function htmlTemplate({
     defaultAttributes.src = inputPaths[1];
     const input1AttributesString = toHTMLAttributeString(defaultAttributes);
     modelViewer1 = `<model-viewer id="viewer1" camera-controls ${input1AttributesString}/>`;
-    tableStart = `<table><thead><tr><th>${fileStems[0]}</th><th>${fileStems[1]}</th></tr></thead><tbody><tr><td>`;
-    tableSeparator = '</td><td>';
+    tableStart = `<table><thead><tr><th>${fileStems[0]}</th><th>Diff</th><th>${fileStems[1]}</th></tr></thead><tbody><tr><td>`;
+    tableSeparator = '</td><td><div id="diff" class="diffView"></td><td>';
   }
 
   return `<!DOCTYPE html>
@@ -124,6 +124,10 @@ export function htmlTemplate({
         margin: 0;
       }
       model-viewer {
+        width: ${width}px;
+        height: ${height}px;
+      }
+      .diffView {
         width: ${width}px;
         height: ${height}px;
       }

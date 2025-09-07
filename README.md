@@ -32,7 +32,7 @@ Options:
   -d, --debug            Enable Debug Mode            [boolean] [default: false]
   -v, --verbose          Enable verbose logging       [boolean] [default: false]
 ```
-<img width="2272" height="1348" alt="image" src="https://github.com/user-attachments/assets/06e39776-bb56-43f9-819b-bdcbfa925d08" />
+<img width="2292" height="1368" alt="image" src="https://github.com/user-attachments/assets/5ef02b4c-0d92-4e09-9241-31b9ae1e99e4" />
 
 * Standard model-viewer orbit controls are used.
 * When doing side by side comparison the right model can be moved freely, the left model forces the right to an identical camera view.

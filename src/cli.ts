@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 
 import {FileServer} from './file-server';
 import {FileHandler} from './file-handler';
@@ -10,24 +11,19 @@ import {
   DEFAULT_EXPOSURE,
   DEFAULT_WIDTH,
   DEFAULT_HEIGHT,
-  DEFAULT_DEBUG,
-  DEFAULT_VERBOSE_LOGGING,
 } from './defaults';
 import {logError, logUnhandledError} from './log-error';
 import {ViewerOptions} from './types/ViewerOptions';
 
-const argv = yargs()
-  .command('$0', '', (yargs) => {
-    yargs
-      .positional('input0', {
-        describe: 'glTF 2.0 binary (GLB) filepath',
-        type: 'string',
-        demand: true,
-      })
-      .positional('input1', {
-        describe: 'glTF 2.0 binary (GLB) filepath',
-        type: 'string',
-      });
+const argv = yargs(hideBin(process.argv))
+  .command('$0 <input0> [input1]', 'view one or compare two glb models.', (yargs) => {
+    yargs.positional('input0', {
+      describe: 'model to view',
+      type: 'string',
+    }).positional('input1', {
+      describe: 'optional model to compare against.',
+      type: 'string'
+    });
   })
   .options({
     color: {
@@ -57,28 +53,10 @@ const argv = yargs()
       describe: 'viewer height',
       default: DEFAULT_HEIGHT,
     },
-    debug: {
-      type: 'boolean',
-      alias: 'd',
-      describe: 'Enable Debug Mode',
-      default: DEFAULT_DEBUG,
-    },
-    verbose: {
-      type: 'boolean',
-      alias: 'v',
-      describe: 'Enable verbose logging',
-      default: DEFAULT_VERBOSE_LOGGING,
-    },
   })
-  .parse(process.argv.slice(2));
+  .parse();  
 
 (async () => {
-  if (argv._.length < 1) {
-    logError('at least one model input is required.');
-    process.exit(1);
-    return;
-  }
-
   async function closeProgram() {
     await localServer.stop();
     await fileHandler.destroy();
@@ -93,20 +71,21 @@ const argv = yargs()
 
   await localServer.start();
 
+  const av = {
+    input0: argv['input0'],
+    input1: argv['input1'],
+    color: argv['color'],
+    width: argv['width'],
+    height: argv['height'],
+    environmentMap: argv['environment_map'],
+    exposure: argv['exposure'],
+  }
+
   try {
     options = await prepareAppOptions({
       localServerPort: localServer.port,
       fileHandler,
-      argv: {
-        inputs: argv._.map(String),
-        environmentMap: argv.environment_map,
-        exposure: argv.exposure,
-        debug: argv.debug,
-        width: argv.width,
-        height: argv.height,
-        color: argv.color,
-      },
-      debug: argv.debug,
+      argv: av,
     });
   } catch (error) {
     logError(error);

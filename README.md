@@ -29,8 +29,6 @@ Options:
       --exposure         exposure in stops                 [number] [default: 0]
   -w, --width            viewer width                    [number] [default: 512]
   -h, --height           viewer height                   [number] [default: 512]
-  -d, --debug            Enable Debug Mode            [boolean] [default: false]
-  -v, --verbose          Enable verbose logging       [boolean] [default: false]
 ```
 <img width="2292" height="1368" alt="image" src="https://github.com/user-attachments/assets/5ef02b4c-0d92-4e09-9241-31b9ae1e99e4" />
 

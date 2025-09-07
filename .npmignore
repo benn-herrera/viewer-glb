@@ -3,5 +3,6 @@ test
 .dev
 .shadowenv.d
 .gitignore
-railgun.yml
 tsconfig.json
+dist/__mocks__
+  

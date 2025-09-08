@@ -75,6 +75,5 @@ export async function prepareAppOptions({
     height,
     width,
     inputPaths,
-    devicePixelRatio: 1,
   };
 }

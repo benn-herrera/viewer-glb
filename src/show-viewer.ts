@@ -13,7 +13,7 @@ export async function showViewer(
   localServer: FileServer,
   fileHandler: FileHandler,
 ) {
-  const {modelViewerUrl, width, height, devicePixelRatio} = options;
+  const {modelViewerUrl, width, height} = options;
   const winWidth = width * options.inputPaths.length + (options.inputPaths.length > 1 ? 10 : 3);
   const winHeight = height + (options.inputPaths.length > 1 ? 130 : 70);
   const data = htmlTemplate({...options, modelViewerUrl}, winWidth, winHeight);
@@ -34,11 +34,7 @@ export async function showViewer(
 
   const browser = await puppeteer.launch({
     args,
-    defaultViewport: null /*{
-      width: winWidth,
-      height: winHeight,
-      deviceScaleFactor: devicePixelRatio,
-    }*/,
+    defaultViewport: null,
     headless,
   });
 

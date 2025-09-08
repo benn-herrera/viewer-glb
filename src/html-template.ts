@@ -10,7 +10,6 @@ export interface TemplateViewerOptions {
   backgroundColor: string;
   environmentMap: string;
   exposure: number;
-  devicePixelRatio: number;
   modelViewerArgs?: AttributesObject;
 }
 
@@ -38,7 +37,6 @@ export function htmlTemplate({
   height,
   inputPaths,
   backgroundColor,
-  devicePixelRatio,
   environmentMap,
   exposure,
 }: TemplateViewerOptions,
@@ -85,7 +83,6 @@ export function htmlTemplate({
 <html>
   <head>
     <title>Viewer-GLB</title>
-    <meta name="viewport" content="width=device-width, initial-scale=${devicePixelRatio}">
     <script type="module"
       src="${modelViewerUrl}">
     </script>
@@ -301,7 +298,7 @@ export function htmlTemplate({
       .diffView {
         width: ${width}px;
         height: ${height}px;
-        border: 1px solid #ccc;
+        border: 0px;
       }
       table {                
         border-collapse: collapse;

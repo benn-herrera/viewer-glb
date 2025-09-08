@@ -250,23 +250,16 @@ export function htmlTemplate({
               diffPromises = null;
             });
           }
-          
-          // Update diff when either viewer finishes loading
-          viewer0.addEventListener('load', updateDiff);
-          viewer1.addEventListener('load', updateDiff);
-          
-          // Update diff on camera changes (after a short delay to allow rendering)
-          let diffTimeout;
+
           const scheduleDiffUpdate = () => {
             if (diffPromises != null) {
               return;
             }
-            clearTimeout(diffTimeout);
-            diffTimeout = setTimeout(updateDiff, 200);
+            setTimeout(updateDiff, 5);
           };
-          
           viewer0.addEventListener('camera-change', scheduleDiffUpdate);
           viewer1.addEventListener('camera-change', scheduleDiffUpdate);
+          // start off with fresh diff
           updateDiff();
         }
       }

@@ -74,9 +74,8 @@ export function htmlTemplate({
     const input1AttributesString = toHTMLAttributeString(defaultAttributes);
     modelViewer1 = `<model-viewer id="viewer1" camera-controls ${input1AttributesString}/>`;    
     tableStart = `<table><thead><tr><th>${fileStems[0]}</th><th>Diff</th><th>${fileStems[1]}</th></tr></thead><tbody><tr><td>`;
-    // AI the button should be on a new bottom row that spans the width of the table.
-    // AI! be sure to increase the winHeight value in show-viewer.ts enough to make the bottom row of the table visible
-    tableSeparator = '</td><td><canvas id="diff" class="diffView"></canvas><button id="toggleDiff" class="diffToggle">Toggle Diff</button></td><td>';
+    tableSeparator = '</td><td><canvas id="diff" class="diffView"></canvas></td><td>';
+    tableEnd = '</td></tr><tr><td colspan="3" style="text-align: center;"><button id="toggleDiff" class="diffToggle">Toggle Diff</button></td></tr></tbody></table>';
   }
 
   return `<!DOCTYPE html>
@@ -256,8 +255,8 @@ export function htmlTemplate({
         padding: 10px;
       }
       .diffToggle {
-        display: block;
-        margin: 10px auto 0;
+        display: inline-block;
+        margin: 10px auto;
         padding: 8px 16px;
         background-color: #f0f0f0;
         border: 1px solid #ccc;

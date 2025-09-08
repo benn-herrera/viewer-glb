@@ -7,10 +7,10 @@ import {FileHandler} from './file-handler';
 import {existsSync} from 'fs';
 
 export interface Argv {
-  inputs: string[];
+  input0: string;
+  input1?: string;
   environmentMap: string;
   exposure: number;
-  debug?: boolean;
   width: number;
   height: number;
   color?: string;
@@ -20,23 +20,25 @@ export interface PrepareAppOptionsArgs {
   localServerPort: number;
   fileHandler: FileHandler;
   argv: Argv;
-  debug?: boolean;
 }
 
 export async function prepareAppOptions({
   localServerPort,
   fileHandler,
-  debug,
   argv,
 }: PrepareAppOptionsArgs): Promise<ViewerOptions> {
   const {
-    inputs,
+    input0,
+    input1,
     environmentMap,
     height,
     width,
     color: backgroundColor,
-    debug: argvDebug,
   } = argv;
+  const inputs = [input0];
+  if (input1) {
+    inputs.push(input1);
+  }
   const model3dFileNames = await fileHandler.addFiles(inputs);
   const inputPaths = model3dFileNames.map((n) => {
     return getLocalUrl({port: localServerPort, fileName: n});
@@ -72,8 +74,6 @@ export async function prepareAppOptions({
     exposure: argv.exposure,
     height,
     width,
-    debug: debug || argvDebug,
     inputPaths,
-    devicePixelRatio: 1,
   };
 }

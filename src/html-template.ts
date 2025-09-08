@@ -10,7 +10,6 @@ export interface TemplateViewerOptions {
   backgroundColor: string;
   environmentMap: string;
   exposure: number;
-  devicePixelRatio: number;
   modelViewerArgs?: AttributesObject;
 }
 
@@ -32,16 +31,19 @@ const errorMessagesForAttributeKey = {
   id: '`id` cannot be passed since it would cause the renderer to break',
 };
 
-export function htmlTemplate({
-  modelViewerUrl,
-  width,
-  height,
-  inputPaths,
-  backgroundColor,
-  devicePixelRatio,
-  environmentMap,
-  exposure,
-}: TemplateViewerOptions): string {
+export function htmlTemplate(
+  {
+    modelViewerUrl,
+    width,
+    height,
+    inputPaths,
+    backgroundColor,
+    environmentMap,
+    exposure,
+  }: TemplateViewerOptions,
+  winWidth: number,
+  winHeight: number,
+): string {
   const defaultAttributes = {
     style: `background-color: ${backgroundColor};`,
     'interaction-prompt': 'none',
@@ -73,44 +75,211 @@ export function htmlTemplate({
     defaultAttributes.src = inputPaths[1];
     const input1AttributesString = toHTMLAttributeString(defaultAttributes);
     modelViewer1 = `<model-viewer id="viewer1" camera-controls ${input1AttributesString}/>`;
-    tableStart = `<table><thead><tr><th>${fileStems[0]}</th><th>${fileStems[1]}</th></tr></thead><tbody><tr><td>`;
-    tableSeparator = '</td><td>';
+    tableStart = `<table><thead><tr><th>${fileStems[0]}</th><th id="diffHeader"></th><th>${fileStems[1]}</th></tr></thead><tbody><tr><td>`;
+    tableSeparator = '</td><td id="diffContainer"></td><td>';
+    tableEnd =
+      '</td></tr><tr><td colspan="3" style="text-align: center;"><button id="toggleDiff" class="diffToggle">Toggle Diff</button></td></tr></tbody></table>';
   }
 
   return `<!DOCTYPE html>
 <html>
   <head>
     <title>Viewer-GLB</title>
-    <meta name="viewport" content="width=device-width, initial-scale=${devicePixelRatio}">
     <script type="module"
       src="${modelViewerUrl}">
     </script>
     <script>
-      let firstCall = true;
+      let firstCamCall = true;
+      let firstLoad = true;
+      let diffPromises = null;
+      const winWidth = ${winWidth};
+      const winHeight = ${winHeight};
 
       function copyCameraParams(fromCam, toCam) {
-        if (firstCall) {
+        if (firstCamCall) {
           const fromParams = fromCam.getCameraOrbit();
           const toParams = toCam.getCameraOrbit();
           // synchronize at higher camera radius
           const radius = Math.max(fromParams.radius, toParams.radius);
           fromCam.cameraOrbit = String(fromParams.theta) + 'rad ' + String(fromParams.phi) + 'rad ' + String(radius) + 'm';
           toCam.cameraOrbit = String(toParams.theta) + 'rad ' + String(toParams.phi) + 'rad ' + String(radius) + 'm';
-          firstCall = false;
+          firstCamCall = false;
         }
         else {
           const fromParams = fromCam.getCameraOrbit();
           const theta = String(fromParams.theta);
           const phi = String(fromParams.phi);
-          radius = String(String(fromParams.radius));
+          const radius = String(fromParams.radius);
           toCam.cameraOrbit = theta + 'rad ' + phi + 'rad ' + radius + 'm';
         }        
       }
 
-      window.addEventListener('load', () => {        
-        // Synchronize camera controls between viewers
+      // Capture viewer content to canvas
+      function captureViewerToCanvas(viewer) {
+        return new Promise((resolve) => {
+          const canvas = document.createElement('canvas');
+          canvas.width = ${width};
+          canvas.height = ${height};
+          const ctx = canvas.getContext('2d');
+          
+          // Get the internal renderer canvas from model-viewer
+          const rendererCanvas = viewer.shadowRoot.querySelector('canvas');
+          if (rendererCanvas) {
+            ctx.drawImage(rendererCanvas, 0, 0);
+            resolve(canvas);
+          } else {
+            // Fallback if we can't access the internal canvas
+            resolve(null);
+          }
+        });
+      }
+
+      // Create diff image from two canvases
+      function createDiffImage(canvas0, canvas1, diffCanvas) {
+        if (!canvas0 || !canvas1) return;
+        
+        const ctx = diffCanvas.getContext('2d');
+        if (!ctx) return;
+        
+        diffCanvas.width = ${width};
+        diffCanvas.height = ${height};
+        
+        // Draw first image
+        ctx.drawImage(canvas0, 0, 0);
+        const imageData1 = ctx.getImageData(0, 0, diffCanvas.width, diffCanvas.height);
+        const data0 = imageData1.data;
+        
+        // Draw second image
+        ctx.drawImage(canvas1, 0, 0);
+        const imageData2 = ctx.getImageData(0, 0, diffCanvas.width, diffCanvas.height);
+        const data1 = imageData2.data;
+        
+        // Create diff image data
+        const diffImageData = ctx.createImageData(diffCanvas.width, diffCanvas.height);
+        const diffData = diffImageData.data;
+        
+        // Calculate diff with color coding
+        for (let i = 0; i < data1.length; i += 4) {
+          const r0 = data0[i + 0];
+          const g0 = data0[i + 1];
+          const b0 = data0[i + 2];          
+          const r1 = data1[i + 0];
+          const g1 = data1[i + 1];
+          const b1 = data1[i + 2];
+          
+          // Calculate diff magnitude
+          const diff = Math.max(Math.abs(r1 - r0), Math.max(Math.abs(g1 - g0), Math.abs(b1 - b0)));
+          const idiff = 255 - diff;
+          const diffR = 255;
+          const diffG = 0;
+          const diffB = 255;
+
+          // blend with diff color.
+          diffData[i + 0] = (r0 * idiff + diffR * diff) / 255;
+          diffData[i + 1] = (g0 * idiff + diffG * diff) / 255;
+          diffData[i + 2] = (b0 * idiff + diffB * diff) / 255;
+          diffData[i + 3] = 255;
+        }
+        
+        // Draw diff image
+        ctx.putImageData(diffImageData, 0, 0);
+      }
+
+      function removeDiffView() {
+        // Cancel diff viewer promises
+        if (diffPromises != null) {
+          diffPromises.forEach(promise => {
+            if (promise && typeof promise.cancel === 'function') {
+              promise.cancel();
+            }
+          });
+          diffPromises = null;
+        }
+        
+        const diffContainer = document.getElementById('diffContainer');
+        const diffHeader = document.getElementById('diffHeader');
+
+        if (diffContainer) {
+          diffContainer.innerHTML = '';
+        }
+        
+        if (diffHeader) {
+          diffHeader.textContent = '';
+        }
+
+        // Set window size to accommodate diff view
+        window.resizeTo(winWidth, winHeight);
+      }
+
+      function addDiffView() {
         const viewer0 = document.getElementById('viewer0');
         const viewer1 = document.getElementById('viewer1');
+
+        // Create image diff if we have two viewers
+        if (!(viewer0 && viewer1)) {
+          return;
+        }
+
+        // Set window size to accommodate diff view
+        window.resizeTo(winWidth + ${width}, winHeight);
+
+        // Set the diff header content
+        const diffHeader = document.getElementById('diffHeader');
+        if (diffHeader) {
+          diffHeader.textContent = 'Diff';
+        }
+        
+        // Dynamically create the diff canvas element
+        const diffContainer = document.getElementById('diffContainer');
+        const diffCanvas = document.createElement('canvas');
+        diffCanvas.id = 'diff';
+        diffCanvas.className = 'diffView';
+        diffContainer.appendChild(diffCanvas);
+        
+        if (diffCanvas) {            
+          function updateDiff() {
+            if (diffPromises != null) {
+              return;
+            }
+            diffPromises = [];
+            diffPromises.push(captureViewerToCanvas(viewer0));
+            diffPromises.push(captureViewerToCanvas(viewer1));
+
+            Promise.all(diffPromises).then(([canvas0, canvas1]) => {
+              createDiffImage(canvas0, canvas1, diffCanvas);
+              diffPromises = null;
+            });
+          }
+
+          const scheduleDiffUpdate = () => {
+            if (diffPromises != null) {
+              return;
+            }
+            setTimeout(updateDiff, 5);
+          };
+          viewer0.addEventListener('camera-change', scheduleDiffUpdate);
+          viewer1.addEventListener('camera-change', scheduleDiffUpdate);
+          // start off with fresh diff
+          updateDiff();
+        }
+      }
+
+      function toggleDiffView() {
+        const diffHeader = document.getElementById('diffHeader');
+        if (diffHeader.innerHTML == '') {
+          return addDiffView();
+        }
+        return removeDiffView();
+      }
+
+      window.addEventListener('load', () => {
+        const toggleButton = document.getElementById('toggleDiff');
+        const viewer0 = document.getElementById('viewer0');
+        const viewer1 = document.getElementById('viewer1');
+
+        if (toggleButton) {
+          toggleButton.addEventListener('click', toggleDiffView);
+        }
 
         if (viewer0 && viewer1) {          
           viewer0.addEventListener('camera-change', () => {
@@ -127,9 +296,32 @@ export function htmlTemplate({
         width: ${width}px;
         height: ${height}px;
       }
-      h2 {
+      .diffView {
+        width: ${width}px;
+        height: ${height}px;
+        border: 0px;
+      }
+      table {                
+        border-collapse: collapse;
+      }
+      th {
         text-align: center;
-        margin: 10px 0;
+        padding: 10px;
+      }
+      tr {
+        align: center;
+      }
+      .diffToggle {
+        display: inline-block;
+        margin: 10px auto;
+        padding: 8px 16px;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .diffToggle:hover {
+        background-color: #e0e0e0;
       }
     </style>
   </head>

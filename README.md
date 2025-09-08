@@ -1,8 +1,8 @@
-# 👀 viewer-glb
+# 🔬 viewer-glb
 
 Easily view 1 or compare 2 GLB models interactively.
 
-This utility is derived from [@shopify/screenshot-glb](https://github.com/Shopify/screenshot-glb)
+This utility was derived from [@shopify/screenshot-glb](https://github.com/Shopify/screenshot-glb)
 
 ## Install
 
@@ -14,11 +14,13 @@ Download a [built node package](https://github.com/benn-herrera/viewer-glb/relea
 
 ```sh
 % viewer-glb --help
-viewer-glb
+viewer-glb <input0> [input1]
+
+view one or compare two glb models.
 
 Positionals:
-  input0  glTF 2.0 binary (GLB) filepath                     (required) [string]
-  input1  glTF 2.0 binary (GLB) filepath                                [string]
+  input0  model to view                                                 [string]
+  input1  optional model to compare against.                            [string]
 
 Options:
       --help             Show help                                     [boolean]
@@ -29,13 +31,19 @@ Options:
       --exposure         exposure in stops                 [number] [default: 0]
   -w, --width            viewer width                    [number] [default: 512]
   -h, --height           viewer height                   [number] [default: 512]
-  -d, --debug            Enable Debug Mode            [boolean] [default: false]
-  -v, --verbose          Enable verbose logging       [boolean] [default: false]
 ```
-<img width="2292" height="1368" alt="image" src="https://github.com/user-attachments/assets/5ef02b4c-0d92-4e09-9241-31b9ae1e99e4" />
+
+<img width="1146" height="754" alt="image" src="https://github.com/user-attachments/assets/cb50a733-0464-4f2e-bf37-81f137449f72" />
+
+<img width="1624" height="754" alt="image" src="https://github.com/user-attachments/assets/30402589-4940-4d02-9a26-96c883c9bc54" />
 
 * Standard model-viewer orbit controls are used.
-* When doing side by side comparison the right model can be moved freely, the left model forces the right to an identical camera view.
+* When doing side by side comparison 
+  * The right model can be moved freely
+  * The left model forces the right to an identical camera view
+  * A 'Toggle Diff' button below the views toggles a middle view showing the rendered view diff
+    * Useful for comparing two versions of the same model
+ 
 
 ## Dependencies
 

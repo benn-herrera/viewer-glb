@@ -72,8 +72,9 @@ export function htmlTemplate({
   if (inputPaths.length > 1) {
     defaultAttributes.src = inputPaths[1];
     const input1AttributesString = toHTMLAttributeString(defaultAttributes);
-    modelViewer1 = `<model-viewer id="viewer1" camera-controls ${input1AttributesString}/>`;
+    modelViewer1 = `<model-viewer id="viewer1" camera-controls ${input1AttributesString}/>`;    
     tableStart = `<table><thead><tr><th>${fileStems[0]}</th><th>Diff</th><th>${fileStems[1]}</th></tr></thead><tbody><tr><td>`;
+    // AI! add a button labeled "Toggle Diff" the the center bottom of the viewing area with a callback that prints "View Toggle" to the console
     tableSeparator = '</td><td><canvas id="diff" class="diffView"></canvas></td><td>';
   }
 

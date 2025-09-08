@@ -41,7 +41,10 @@ export function htmlTemplate({
   devicePixelRatio,
   environmentMap,
   exposure,
-}: TemplateViewerOptions): string {
+}: TemplateViewerOptions,
+  winWidth: number,
+  winHeight: number
+): string {
   const defaultAttributes = {
     style: `background-color: ${backgroundColor};`,
     'interaction-prompt': 'none',
@@ -90,6 +93,8 @@ export function htmlTemplate({
       let firstCall = true;
       let showDiff = true;
       let diffPromises = [];
+      const winWidth = ${winWidth};
+      const winHeight = ${winHeight};
 
       function copyCameraParams(fromCam, toCam) {
         if (firstCall) {
@@ -137,6 +142,8 @@ export function htmlTemplate({
         const ctx = diffCanvas.getContext('2d');
         if (!ctx) return;
         
+        // AI! add a call to set the window size to winWidth + width, winHeight
+
         diffCanvas.width = ${width};
         diffCanvas.height = ${height};
         
@@ -269,6 +276,7 @@ export function htmlTemplate({
             
             viewer0.addEventListener('camera-change', scheduleDiffUpdate);
             viewer1.addEventListener('camera-change', scheduleDiffUpdate);
+            updateDiff();
           }
         }
       }

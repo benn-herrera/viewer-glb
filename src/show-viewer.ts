@@ -14,9 +14,9 @@ export async function showViewer(
   fileHandler: FileHandler,
 ) {
   const {modelViewerUrl, width, height, devicePixelRatio} = options;
-  const winWidth = width * (options.inputPaths.length > 1 ? 3 : 1) + 10;
+  const winWidth = width * options.inputPaths.length + 10;
   const winHeight = height + 130;
-  const data = htmlTemplate({...options, modelViewerUrl});
+  const data = htmlTemplate({...options, modelViewerUrl}, winWidth, winHeight);
   const indexPath = await fileHandler.createFile({
     fileName: 'index.html',
     fileContent: data,

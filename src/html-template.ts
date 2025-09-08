@@ -182,6 +182,10 @@ export function htmlTemplate({
         ctx.putImageData(diffImageData, 0, 0);
       }
 
+      function removeDiffView() {
+        // AI! implement
+      }
+
       function addDiffView() {
         // Synchronize camera controls between viewers
         const viewer0 = document.getElementById('viewer0');

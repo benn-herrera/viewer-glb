@@ -89,6 +89,7 @@ export function htmlTemplate({
     <script>
       let firstCall = true;
       let showDiff = true;
+      let diffPromises = [];
 
       function copyCameraParams(fromCam, toCam) {
         if (firstCall) {
@@ -183,7 +184,14 @@ export function htmlTemplate({
       }
 
       function removeDiffView() {
-        // AI! when this function is called all diff viewer promises should be canceled.
+        // Cancel all diff viewer promises
+        diffPromises.forEach(promise => {
+          if (promise && typeof promise.cancel === 'function') {
+            promise.cancel();
+          }
+        });
+        diffPromises = [];
+        
         const diffContainer = document.getElementById('diffContainer');
         const diffHeader = document.getElementById('diffHeader');
         
@@ -239,10 +247,11 @@ export function htmlTemplate({
               if (!showDiff) {
                 return;
               }
-              Promise.all([
-                captureViewerToCanvas(viewer0),
-                captureViewerToCanvas(viewer1)
-              ]).then(([canvas1, canvas2]) => {
+              const promise1 = captureViewerToCanvas(viewer0);
+              const promise2 = captureViewerToCanvas(viewer1);
+              diffPromises = [promise1, promise2];
+              
+              Promise.all(diffPromises).then(([canvas1, canvas2]) => {
                 createDiffImage(canvas1, canvas2, diffCanvas);
               });
             }

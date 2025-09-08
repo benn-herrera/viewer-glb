@@ -202,7 +202,10 @@ export function htmlTemplate({
         
         const diffContainer = document.getElementById('diffContainer');
         const diffHeader = document.getElementById('diffHeader');
-        
+
+        // Set window size to accommodate diff view
+        window.resizeTo(winWidth, winHeight);
+
         if (diffContainer) {
           diffContainer.innerHTML = '';
         }

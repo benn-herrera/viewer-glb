@@ -182,8 +182,7 @@ export function htmlTemplate({
         ctx.putImageData(diffImageData, 0, 0);
       }
 
-      // AI! break this event listener lambda out into a function called addDiffView
-      window.addEventListener('load', () => {        
+      function addDiffView() {
         // Synchronize camera controls between viewers
         const viewer0 = document.getElementById('viewer0');
         const viewer1 = document.getElementById('viewer1');
@@ -241,7 +240,9 @@ export function htmlTemplate({
             viewer1.addEventListener('camera-change', scheduleDiffUpdate);
           }
         }
-      });
+      }
+
+      window.addEventListener('load', addDiffView);
     </script>
     <style>
       body {

@@ -142,7 +142,8 @@ export function htmlTemplate({
         const ctx = diffCanvas.getContext('2d');
         if (!ctx) return;
         
-        // AI! add a call to set the window size to winWidth + width, winHeight
+        // Set window size to accommodate diff view
+        window.resizeTo(winWidth + ${width}, winHeight);
 
         diffCanvas.width = ${width};
         diffCanvas.height = ${height};

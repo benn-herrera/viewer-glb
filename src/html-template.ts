@@ -135,8 +135,8 @@ export function htmlTemplate(
       }
 
       // Create diff image from two canvases
-      function createDiffImage(canvas1, canvas2, diffCanvas) {
-        if (!canvas1 || !canvas2) return;
+      function createDiffImage(canvas0, canvas1, diffCanvas) {
+        if (!canvas0 || !canvas1) return;
         
         const ctx = diffCanvas.getContext('2d');
         if (!ctx) return;
@@ -145,14 +145,14 @@ export function htmlTemplate(
         diffCanvas.height = ${height};
         
         // Draw first image
-        ctx.drawImage(canvas1, 0, 0);
+        ctx.drawImage(canvas0, 0, 0);
         const imageData1 = ctx.getImageData(0, 0, diffCanvas.width, diffCanvas.height);
-        const data1 = imageData1.data;
+        const data0 = imageData1.data;
         
         // Draw second image
-        ctx.drawImage(canvas2, 0, 0);
+        ctx.drawImage(canvas1, 0, 0);
         const imageData2 = ctx.getImageData(0, 0, diffCanvas.width, diffCanvas.height);
-        const data2 = imageData2.data;
+        const data1 = imageData2.data;
         
         // Create diff image data
         const diffImageData = ctx.createImageData(diffCanvas.width, diffCanvas.height);
@@ -160,27 +160,25 @@ export function htmlTemplate(
         
         // Calculate diff with color coding
         for (let i = 0; i < data1.length; i += 4) {
-          const r1 = data1[i];
+          const r0 = data0[i + 0];
+          const g0 = data0[i + 1];
+          const b0 = data0[i + 2];          
+          const r1 = data1[i + 0];
           const g1 = data1[i + 1];
           const b1 = data1[i + 2];
           
-          const r2 = data2[i];
-          const g2 = data2[i + 1];
-          const b2 = data2[i + 2];
-          
-          // Calculate absolute differences
-          const diffR = Math.abs(r1 - r2);
-          const diffG = Math.abs(g1 - g2);
-          const diffB = Math.abs(b1 - b2);
-          
-          // Color code the differences:
-          // - Red channel shows what's unique to first image
-          // - Blue channel shows what's unique to second image
-          // - Green channel shows similarities
-          diffData[i] = diffR;     // Red difference
-          diffData[i + 1] = 0;     // No green difference highlighting
-          diffData[i + 2] = diffB; // Blue difference
-          diffData[i + 3] = 255;   // Alpha
+          // Calculate diff magnitude
+          const diff = Math.max(Math.abs(r1 - r0), Math.max(Math.abs(g1 - g0), Math.abs(b1 - b0)));
+          const idiff = 255 - diff;
+          const diffR = 255;
+          const diffG = 0;
+          const diffB = 255;
+
+          // blend with diff color.
+          diffData[i + 0] = (r0 * idiff + diffR * diff) / 255;
+          diffData[i + 1] = (g0 * idiff + diffG * diff) / 255;
+          diffData[i + 2] = (b0 * idiff + diffB * diff) / 255;
+          diffData[i + 3] = 255;
         }
         
         // Draw diff image
@@ -247,8 +245,8 @@ export function htmlTemplate(
             diffPromises.push(captureViewerToCanvas(viewer0));
             diffPromises.push(captureViewerToCanvas(viewer1));
 
-            Promise.all(diffPromises).then(([canvas1, canvas2]) => {
-              createDiffImage(canvas1, canvas2, diffCanvas);
+            Promise.all(diffPromises).then(([canvas0, canvas1]) => {
+              createDiffImage(canvas0, canvas1, diffCanvas);
               diffPromises = null;
             });
           }

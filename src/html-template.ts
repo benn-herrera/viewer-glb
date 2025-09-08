@@ -74,9 +74,7 @@ export function htmlTemplate({
     const input1AttributesString = toHTMLAttributeString(defaultAttributes);
     modelViewer1 = `<model-viewer id="viewer1" camera-controls ${input1AttributesString}/>`;    
     tableStart = `<table><thead><tr><th>${fileStems[0]}</th><th>Diff</th><th>${fileStems[1]}</th></tr></thead><tbody><tr><td>`;
-    // AI change the creation of the diff column of the table to be done dynamically via DOM manipulation in javascript
-    // instead of being created statically AI!
-    tableSeparator = '</td><td><canvas id="diff" class="diffView"></canvas></td><td>';
+    tableSeparator = '</td><td id="diffContainer"></td><td>';
     tableEnd = '</td></tr><tr><td colspan="3" style="text-align: center;"><button id="toggleDiff" class="diffToggle">Toggle Diff</button></td></tr></tbody></table>';
   }
 
@@ -197,7 +195,13 @@ export function htmlTemplate({
 
         // Create image diff if we have two viewers
         if (viewer0 && viewer1) {
-          const diffCanvas = document.getElementById('diff');
+          // Dynamically create the diff canvas element
+          const diffContainer = document.getElementById('diffContainer');
+          const diffCanvas = document.createElement('canvas');
+          diffCanvas.id = 'diff';
+          diffCanvas.className = 'diffView';
+          diffContainer.appendChild(diffCanvas);
+          
           const toggleButton = document.getElementById('toggleDiff');
           
           if (diffCanvas && toggleButton) {

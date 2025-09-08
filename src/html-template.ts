@@ -74,8 +74,7 @@ export function htmlTemplate({
     const input1AttributesString = toHTMLAttributeString(defaultAttributes);
     modelViewer1 = `<model-viewer id="viewer1" camera-controls ${input1AttributesString}/>`;    
     tableStart = `<table><thead><tr><th>${fileStems[0]}</th><th>Diff</th><th>${fileStems[1]}</th></tr></thead><tbody><tr><td>`;
-    // AI! add a button labeled "Toggle Diff" the the center bottom of the viewing area with a callback that prints "View Toggle" to the console
-    tableSeparator = '</td><td><canvas id="diff" class="diffView"></canvas></td><td>';
+    tableSeparator = '</td><td><canvas id="diff" class="diffView"></canvas><button id="toggleDiff" class="diffToggle">Toggle Diff</button></td><td>';
   }
 
   return `<!DOCTYPE html>
@@ -195,7 +194,14 @@ export function htmlTemplate({
         // Create image diff if we have two viewers
         if (viewer0 && viewer1) {
           const diffCanvas = document.getElementById('diff');
-          if (diffCanvas) {
+          const toggleButton = document.getElementById('toggleDiff');
+          
+          if (diffCanvas && toggleButton) {
+            // Add click handler to toggle button
+            toggleButton.addEventListener('click', () => {
+              console.log('View Toggle');
+            });
+            
             function updateDiff() {
               Promise.all([
                 captureViewerToCanvas(viewer0),
@@ -246,6 +252,18 @@ export function htmlTemplate({
       th {
         text-align: center;
         padding: 10px;
+      }
+      .diffToggle {
+        display: block;
+        margin: 10px auto 0;
+        padding: 8px 16px;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .diffToggle:hover {
+        background-color: #e0e0e0;
       }
     </style>
   </head>

@@ -186,7 +186,7 @@ export function htmlTemplate({
       }
 
       function removeDiffView() {
-        // Cancel all diff viewer promises
+        // Cancel diff viewer promises
         if (diffPromises != null) {
           diffPromises.forEach(promise => {
             if (promise && typeof promise.cancel === 'function') {
@@ -199,9 +199,6 @@ export function htmlTemplate({
         const diffContainer = document.getElementById('diffContainer');
         const diffHeader = document.getElementById('diffHeader');
 
-        // Set window size to accommodate diff view
-        window.resizeTo(winWidth, winHeight);
-
         if (diffContainer) {
           diffContainer.innerHTML = '';
         }
@@ -209,66 +206,68 @@ export function htmlTemplate({
         if (diffHeader) {
           diffHeader.textContent = '';
         }
+
+        // Set window size to accommodate diff view
+        window.resizeTo(winWidth, winHeight);
       }
 
       function addDiffView() {
-        // Set window size to accommodate diff view
-        window.resizeTo(winWidth + ${width}, winHeight);
-
         const viewer0 = document.getElementById('viewer0');
         const viewer1 = document.getElementById('viewer1');
 
-        if (viewer0 && viewer1) {          
-          viewer0.addEventListener('camera-change', () => {
-            copyCameraParams(viewer0, viewer1);
-          });          
+        // Create image diff if we have two viewers
+        if (!(viewer0 && viewer1)) {
+          return;
         }
 
-        // Create image diff if we have two viewers
-        if (viewer0 && viewer1) {
-          // Set the diff header content
-          const diffHeader = document.getElementById('diffHeader');
-          if (diffHeader) {
-            diffHeader.textContent = 'Diff';
+        // Set window size to accommodate diff view
+        window.resizeTo(winWidth + ${width}, winHeight);
+
+        // Set the diff header content
+        const diffHeader = document.getElementById('diffHeader');
+        if (diffHeader) {
+          diffHeader.textContent = 'Diff';
+        }
+        
+        // Dynamically create the diff canvas element
+        const diffContainer = document.getElementById('diffContainer');
+        const diffCanvas = document.createElement('canvas');
+        diffCanvas.id = 'diff';
+        diffCanvas.className = 'diffView';
+        diffContainer.appendChild(diffCanvas);
+        
+        if (diffCanvas) {            
+          function updateDiff() {
+            if (diffPromises != null) {
+              return;
+            }
+            diffPromises = [];
+            diffPromises.push(captureViewerToCanvas(viewer0));
+            diffPromises.push(captureViewerToCanvas(viewer1));
+
+            Promise.all(diffPromises).then(([canvas1, canvas2]) => {
+              createDiffImage(canvas1, canvas2, diffCanvas);
+              diffPromises = null;
+            });
           }
           
-          // Dynamically create the diff canvas element
-          const diffContainer = document.getElementById('diffContainer');
-          const diffCanvas = document.createElement('canvas');
-          diffCanvas.id = 'diff';
-          diffCanvas.className = 'diffView';
-          diffContainer.appendChild(diffCanvas);
-         
-          if (diffCanvas) {            
-            function updateDiff() {
-              if (diffPromises != null) {
-                return;
-              }
-              diffPromises = [];
-              diffPromises.push(captureViewerToCanvas(viewer0));
-              diffPromises.push(captureViewerToCanvas(viewer1));
-
-              Promise.all(diffPromises).then(([canvas1, canvas2]) => {
-                createDiffImage(canvas1, canvas2, diffCanvas);
-                diffPromises = null;
-              });
+          // Update diff when either viewer finishes loading
+          viewer0.addEventListener('load', updateDiff);
+          viewer1.addEventListener('load', updateDiff);
+          
+          // Update diff on camera changes (after a short delay to allow rendering)
+          let diffTimeout;
+          const scheduleDiffUpdate = () => {
+            if (diffPromises != null) {
+              return;
             }
-            
-            // Update diff when either viewer finishes loading
-            viewer0.addEventListener('load', updateDiff);
-            viewer1.addEventListener('load', updateDiff);
-            
-            // Update diff on camera changes (after a short delay to allow rendering)
-            let diffTimeout;
-            const scheduleDiffUpdate = () => {
-              clearTimeout(diffTimeout);
-              diffTimeout = setTimeout(updateDiff, 200);
-            };
-            
-            viewer0.addEventListener('camera-change', scheduleDiffUpdate);
-            viewer1.addEventListener('camera-change', scheduleDiffUpdate);
-            updateDiff();
-          }
+            clearTimeout(diffTimeout);
+            diffTimeout = setTimeout(updateDiff, 200);
+          };
+          
+          viewer0.addEventListener('camera-change', scheduleDiffUpdate);
+          viewer1.addEventListener('camera-change', scheduleDiffUpdate);
+          updateDiff();
         }
       }
 
@@ -281,10 +280,19 @@ export function htmlTemplate({
       }
 
       window.addEventListener('load', () => {
-          const toggleButton = document.getElementById('toggleDiff');
-          if (toggleButton) {
-            toggleButton.addEventListener('click', toggleDiffView);
-          }
+        const toggleButton = document.getElementById('toggleDiff');
+        const viewer0 = document.getElementById('viewer0');
+        const viewer1 = document.getElementById('viewer1');
+
+        if (toggleButton) {
+          toggleButton.addEventListener('click', toggleDiffView);
+        }
+
+        if (viewer0 && viewer1) {          
+          viewer0.addEventListener('camera-change', () => {
+            copyCameraParams(viewer0, viewer1);
+          });          
+        }
       });
     </script>
     <style>

@@ -14,11 +14,13 @@ Download a [built node package](https://github.com/benn-herrera/viewer-glb/relea
 
 ```sh
 % viewer-glb --help
-viewer-glb
+viewer-glb <input0> [input1]
+
+view one or compare two glb models.
 
 Positionals:
-  input0  glTF 2.0 binary (GLB) filepath                     (required) [string]
-  input1  glTF 2.0 binary (GLB) filepath                                [string]
+  input0  model to view                                                 [string]
+  input1  optional model to compare against.                            [string]
 
 Options:
       --help             Show help                                     [boolean]
@@ -28,12 +30,17 @@ Options:
       --environment_map  HDR environment map image, neutral, or legacy  [string]
       --exposure         exposure in stops                 [number] [default: 0]
   -w, --width            viewer width                    [number] [default: 512]
-  -h, --height           viewer height                   [number] [default: 512]
-```
+  -h, --height           viewer height                   [number] [default: 512]```
+
 <img width="2292" height="1368" alt="image" src="https://github.com/user-attachments/assets/5ef02b4c-0d92-4e09-9241-31b9ae1e99e4" />
 
 * Standard model-viewer orbit controls are used.
-* When doing side by side comparison the right model can be moved freely, the left model forces the right to an identical camera view.
+* When doing side by side comparison 
+  * The right model can be moved freely
+  * The left model forces the right to an identical camera view
+  * A 'Toggle Diff' button below the views toggles a middle view showing the rendered view diff
+    * Useful for comparing two versions of the same model
+ 
 
 ## Dependencies
 

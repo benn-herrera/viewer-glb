@@ -183,7 +183,16 @@ export function htmlTemplate({
       }
 
       function removeDiffView() {
-        // AI! implement
+        const diffContainer = document.getElementById('diffContainer');
+        const diffHeader = document.getElementById('diffHeader');
+        
+        if (diffContainer) {
+          diffContainer.innerHTML = '';
+        }
+        
+        if (diffHeader) {
+          diffHeader.textContent = '';
+        }
       }
 
       function addDiffView() {

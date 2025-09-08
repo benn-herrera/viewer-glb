@@ -182,6 +182,7 @@ export function htmlTemplate({
         ctx.putImageData(diffImageData, 0, 0);
       }
 
+      // AI! break this event listener lambda out into a function called addDiffView
       window.addEventListener('load', () => {        
         // Synchronize camera controls between viewers
         const viewer0 = document.getElementById('viewer0');

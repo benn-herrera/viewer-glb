@@ -34,11 +34,11 @@ export async function showViewer(
 
   const browser = await puppeteer.launch({
     args,
-    defaultViewport: {
+    defaultViewport: null /*{
       width: winWidth,
       height: winHeight,
       deviceScaleFactor: devicePixelRatio,
-    },
+    }*/,
     headless,
   });
 

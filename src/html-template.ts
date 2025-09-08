@@ -90,21 +90,21 @@ export function htmlTemplate({
       src="${modelViewerUrl}">
     </script>
     <script>
-      let firstCall = true;
-      let showDiff = true;
-      let diffPromises = [];
+      let firstCamCall = true;
+      let firstLoad = true;
+      let diffPromises = null;
       const winWidth = ${winWidth};
       const winHeight = ${winHeight};
 
       function copyCameraParams(fromCam, toCam) {
-        if (firstCall) {
+        if (firstCamCall) {
           const fromParams = fromCam.getCameraOrbit();
           const toParams = toCam.getCameraOrbit();
           // synchronize at higher camera radius
           const radius = Math.max(fromParams.radius, toParams.radius);
           fromCam.cameraOrbit = String(fromParams.theta) + 'rad ' + String(fromParams.phi) + 'rad ' + String(radius) + 'm';
           toCam.cameraOrbit = String(toParams.theta) + 'rad ' + String(toParams.phi) + 'rad ' + String(radius) + 'm';
-          firstCall = false;
+          firstCamCall = false;
         }
         else {
           const fromParams = fromCam.getCameraOrbit();
@@ -142,9 +142,6 @@ export function htmlTemplate({
         const ctx = diffCanvas.getContext('2d');
         if (!ctx) return;
         
-        // Set window size to accommodate diff view
-        window.resizeTo(winWidth + ${width}, winHeight);
-
         diffCanvas.width = ${width};
         diffCanvas.height = ${height};
         
@@ -193,12 +190,14 @@ export function htmlTemplate({
 
       function removeDiffView() {
         // Cancel all diff viewer promises
-        diffPromises.forEach(promise => {
-          if (promise && typeof promise.cancel === 'function') {
-            promise.cancel();
-          }
-        });
-        diffPromises = [];
+        if (diffPromises != null) {
+          diffPromises.forEach(promise => {
+            if (promise && typeof promise.cancel === 'function') {
+              promise.cancel();
+            }
+          });
+          diffPromises = null;
+        }
         
         const diffContainer = document.getElementById('diffContainer');
         const diffHeader = document.getElementById('diffHeader');
@@ -216,7 +215,9 @@ export function htmlTemplate({
       }
 
       function addDiffView() {
-        // Synchronize camera controls between viewers
+        // Set window size to accommodate diff view
+        window.resizeTo(winWidth + ${width}, winHeight);
+
         const viewer0 = document.getElementById('viewer0');
         const viewer1 = document.getElementById('viewer1');
 
@@ -240,30 +241,19 @@ export function htmlTemplate({
           diffCanvas.id = 'diff';
           diffCanvas.className = 'diffView';
           diffContainer.appendChild(diffCanvas);
-          
-          const toggleButton = document.getElementById('toggleDiff');
-          
-          if (diffCanvas && toggleButton) {
-            // Add click handler to toggle button
-            toggleButton.addEventListener('click', () => {
-              showDiff = !showDiff;
-              if (showDiff) {
-                addDiffView();
-              } else {
-                removeDiffView();
-              }
-            });
-            
+         
+          if (diffCanvas) {            
             function updateDiff() {
-              if (!showDiff) {
+              if (diffPromises != null) {
                 return;
               }
-              const promise1 = captureViewerToCanvas(viewer0);
-              const promise2 = captureViewerToCanvas(viewer1);
-              diffPromises = [promise1, promise2];
-              
+              diffPromises = [];
+              diffPromises.push(captureViewerToCanvas(viewer0));
+              diffPromises.push(captureViewerToCanvas(viewer1));
+
               Promise.all(diffPromises).then(([canvas1, canvas2]) => {
                 createDiffImage(canvas1, canvas2, diffCanvas);
+                diffPromises = null;
               });
             }
             
@@ -285,7 +275,20 @@ export function htmlTemplate({
         }
       }
 
-      window.addEventListener('load', addDiffView);
+      function toggleDiffView() {
+        const diffHeader = document.getElementById('diffHeader');
+        if (diffHeader.innerHTML == '') {
+          return addDiffView();
+        }
+        return removeDiffView();
+      }
+
+      window.addEventListener('load', () => {
+          const toggleButton = document.getElementById('toggleDiff');
+          if (toggleButton) {
+            toggleButton.addEventListener('click', toggleDiffView);
+          }
+      });
     </script>
     <style>
       body {
@@ -300,17 +303,15 @@ export function htmlTemplate({
         height: ${height}px;
         border: 1px solid #ccc;
       }
-      h2 {
-        text-align: center;
-        margin: 10px 0;
-      }
-      table {
-        width: 100%;
+      table {                
         border-collapse: collapse;
       }
       th {
         text-align: center;
         padding: 10px;
+      }
+      tr {
+        align: center;
       }
       .diffToggle {
         display: inline-block;

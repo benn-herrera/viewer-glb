@@ -1,30 +1,32 @@
 #!/usr/bin/env node
 
 import yargs from 'yargs';
-import { hideBin } from 'yargs/helpers';
+import {hideBin} from 'yargs/helpers';
 
 import {FileServer} from './file-server';
 import {FileHandler} from './file-handler';
 import {prepareAppOptions} from './prepare-app-options';
 import {showViewer} from './show-viewer';
-import {
-  DEFAULT_EXPOSURE,
-  DEFAULT_WIDTH,
-  DEFAULT_HEIGHT,
-} from './defaults';
+import {DEFAULT_EXPOSURE, DEFAULT_WIDTH, DEFAULT_HEIGHT} from './defaults';
 import {logError, logUnhandledError} from './log-error';
 import {ViewerOptions} from './types/ViewerOptions';
 
 const argv = yargs(hideBin(process.argv))
-  .command('$0 <input0> [input1]', 'view one or compare two glb models.', (yargs) => {
-    yargs.positional('input0', {
-      describe: 'model to view',
-      type: 'string',
-    }).positional('input1', {
-      describe: 'optional model to compare against.',
-      type: 'string'
-    });
-  })
+  .command(
+    '$0 <input0> [input1]',
+    'view one or compare two glb models.',
+    (yargs) => {
+      yargs
+        .positional('input0', {
+          describe: 'model to view',
+          type: 'string',
+        })
+        .positional('input1', {
+          describe: 'optional model to compare against.',
+          type: 'string',
+        });
+    },
+  )
   .options({
     color: {
       type: 'string',
@@ -54,7 +56,7 @@ const argv = yargs(hideBin(process.argv))
       default: DEFAULT_HEIGHT,
     },
   })
-  .parse();  
+  .parse();
 
 (async () => {
   async function closeProgram() {
@@ -79,7 +81,7 @@ const argv = yargs(hideBin(process.argv))
     height: argv['height'],
     environmentMap: argv['environment_map'],
     exposure: argv['exposure'],
-  }
+  };
 
   try {
     options = await prepareAppOptions({

@@ -35,9 +35,9 @@ export async function prepareAppOptions({
     width,
     color: backgroundColor,
   } = argv;
-  const inputs = [input0]
+  const inputs = [input0];
   if (input1) {
-    inputs.push(input1)
+    inputs.push(input1);
   }
   const model3dFileNames = await fileHandler.addFiles(inputs);
   const inputPaths = model3dFileNames.map((n) => {

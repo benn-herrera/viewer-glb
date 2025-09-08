@@ -31,17 +31,18 @@ const errorMessagesForAttributeKey = {
   id: '`id` cannot be passed since it would cause the renderer to break',
 };
 
-export function htmlTemplate({
-  modelViewerUrl,
-  width,
-  height,
-  inputPaths,
-  backgroundColor,
-  environmentMap,
-  exposure,
-}: TemplateViewerOptions,
+export function htmlTemplate(
+  {
+    modelViewerUrl,
+    width,
+    height,
+    inputPaths,
+    backgroundColor,
+    environmentMap,
+    exposure,
+  }: TemplateViewerOptions,
   winWidth: number,
-  winHeight: number
+  winHeight: number,
 ): string {
   const defaultAttributes = {
     style: `background-color: ${backgroundColor};`,
@@ -76,7 +77,8 @@ export function htmlTemplate({
     modelViewer1 = `<model-viewer id="viewer1" camera-controls ${input1AttributesString}/>`;
     tableStart = `<table><thead><tr><th>${fileStems[0]}</th><th id="diffHeader"></th><th>${fileStems[1]}</th></tr></thead><tbody><tr><td>`;
     tableSeparator = '</td><td id="diffContainer"></td><td>';
-    tableEnd = '</td></tr><tr><td colspan="3" style="text-align: center;"><button id="toggleDiff" class="diffToggle">Toggle Diff</button></td></tr></tbody></table>';
+    tableEnd =
+      '</td></tr><tr><td colspan="3" style="text-align: center;"><button id="toggleDiff" class="diffToggle">Toggle Diff</button></td></tr></tbody></table>';
   }
 
   return `<!DOCTYPE html>

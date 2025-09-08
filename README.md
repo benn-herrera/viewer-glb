@@ -1,8 +1,8 @@
-# 👀 viewer-glb
+# 🔬 viewer-glb
 
 Easily view 1 or compare 2 GLB models interactively.
 
-This utility is derived from [@shopify/screenshot-glb](https://github.com/Shopify/screenshot-glb)
+This utility was derived from [@shopify/screenshot-glb](https://github.com/Shopify/screenshot-glb)
 
 ## Install
 
@@ -30,9 +30,12 @@ Options:
       --environment_map  HDR environment map image, neutral, or legacy  [string]
       --exposure         exposure in stops                 [number] [default: 0]
   -w, --width            viewer width                    [number] [default: 512]
-  -h, --height           viewer height                   [number] [default: 512]```
+  -h, --height           viewer height                   [number] [default: 512]
+```
 
-<img width="2292" height="1368" alt="image" src="https://github.com/user-attachments/assets/5ef02b4c-0d92-4e09-9241-31b9ae1e99e4" />
+<img width="1146" height="754" alt="image" src="https://github.com/user-attachments/assets/cb50a733-0464-4f2e-bf37-81f137449f72" />
+
+<img width="1624" height="754" alt="image" src="https://github.com/user-attachments/assets/30402589-4940-4d02-9a26-96c883c9bc54" />
 
 * Standard model-viewer orbit controls are used.
 * When doing side by side comparison 

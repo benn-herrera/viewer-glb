@@ -183,6 +183,7 @@ export function htmlTemplate({
       }
 
       function removeDiffView() {
+        // AI! when this function is called all diff viewer promises should be canceled.
         const diffContainer = document.getElementById('diffContainer');
         const diffHeader = document.getElementById('diffHeader');
         
@@ -227,9 +228,17 @@ export function htmlTemplate({
             // Add click handler to toggle button
             toggleButton.addEventListener('click', () => {
               showDiff = !showDiff;
+              if (showDiff) {
+                addDiffView();
+              } else {
+                removeDiffView();
+              }
             });
             
             function updateDiff() {
+              if (!showDiff) {
+                return;
+              }
               Promise.all([
                 captureViewerToCanvas(viewer0),
                 captureViewerToCanvas(viewer1)

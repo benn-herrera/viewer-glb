@@ -74,6 +74,8 @@ export function htmlTemplate({
     const input1AttributesString = toHTMLAttributeString(defaultAttributes);
     modelViewer1 = `<model-viewer id="viewer1" camera-controls ${input1AttributesString}/>`;    
     tableStart = `<table><thead><tr><th>${fileStems[0]}</th><th>Diff</th><th>${fileStems[1]}</th></tr></thead><tbody><tr><td>`;
+    // AI change the creation of the diff column of the table to be done dynamically via DOM manipulation in javascript
+    // instead of being created statically AI!
     tableSeparator = '</td><td><canvas id="diff" class="diffView"></canvas></td><td>';
     tableEnd = '</td></tr><tr><td colspan="3" style="text-align: center;"><button id="toggleDiff" class="diffToggle">Toggle Diff</button></td></tr></tbody></table>';
   }
@@ -88,6 +90,7 @@ export function htmlTemplate({
     </script>
     <script>
       let firstCall = true;
+      let showDiff = true;
 
       function copyCameraParams(fromCam, toCam) {
         if (firstCall) {
@@ -200,7 +203,7 @@ export function htmlTemplate({
           if (diffCanvas && toggleButton) {
             // Add click handler to toggle button
             toggleButton.addEventListener('click', () => {
-              console.log('View Toggle');
+              showDiff = !showDiff;
             });
             
             function updateDiff() {

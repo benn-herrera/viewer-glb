@@ -45,8 +45,7 @@ export async function prepareAppOptions({
     return getLocalUrl({port: localServerPort, fileName: n});
   });
   const inputSizes = model3dFileNames.map((fileName) => {
-    const fullPath = path.join(fileHandler.fileDirectory, fileName);
-    return statSync(fullPath).size;
+    return statSync(fileName).size;
   });
 
   const defaultBackgroundColor = colors.gray;

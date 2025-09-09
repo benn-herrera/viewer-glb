@@ -1,16 +1,11 @@
 import puppeteer from 'puppeteer';
-import {FileServer} from './file-server';
 import {htmlTemplate} from './html-template';
 import {ViewerOptions} from './types/ViewerOptions';
 import {FileHandler} from './file-handler';
 
-const timeDelta = (start, end) => {
-  return ((end - start) / 1000).toPrecision(3);
-};
 
 export async function showViewer(
   options: ViewerOptions,
-  localServer: FileServer,
   fileHandler: FileHandler,
 ) {
   const {modelViewerUrl, width, height} = options;
@@ -24,7 +19,6 @@ export async function showViewer(
     fileContent: data,
   });
 
-  const headless = false;
   const args = [
     '--no-sandbox',
     '--disable-dev-shm-usage',
@@ -37,7 +31,7 @@ export async function showViewer(
   const browser = await puppeteer.launch({
     args,
     defaultViewport: null,
-    headless,
+    headless: false,
   });
 
   console.log('🌐  Browser is open. Close the browser window to exit.');

@@ -172,16 +172,19 @@ export function htmlTemplate(
           const b1 = data1[i + 2];
           
           // Calculate diff magnitude
-          const diff = Math.max(Math.abs(r1 - r0), Math.max(Math.abs(g1 - g0), Math.abs(b1 - b0)));
-          const idiff = 255 - diff;
+          let idiff = 1.0 - Math.max(Math.abs(r1 - r0), Math.max(Math.abs(g1 - g0), Math.abs(b1 - b0))) / 255.0;
+          idiff = idiff * idiff * idiff;
+          const diff = 1.0 - idiff;
+          idiff *= 0.5;
+          // marker color
           const diffR = 255;
           const diffG = 0;
           const diffB = 255;
 
           // blend with diff color.
-          diffData[i + 0] = (r0 * idiff + diffR * diff) / 255;
-          diffData[i + 1] = (g0 * idiff + diffG * diff) / 255;
-          diffData[i + 2] = (b0 * idiff + diffB * diff) / 255;
+          diffData[i + 0] = (r0 * idiff + diffR * diff);
+          diffData[i + 1] = (g0 * idiff + diffG * diff);
+          diffData[i + 2] = (b0 * idiff + diffB * diff);
           diffData[i + 3] = 255;
         }
         

@@ -100,7 +100,7 @@ const argv = yargs(hideBin(process.argv))
   }
 
   try {
-    await showViewer(options, localServer, fileHandler);
+    await showViewer(options, fileHandler);
   } catch (err) {
     logUnhandledError(err);
     processStatus = 1;

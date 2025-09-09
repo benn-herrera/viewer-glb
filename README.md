@@ -33,9 +33,9 @@ Options:
   -h, --height           viewer height                   [number] [default: 512]
 ```
 
-<img width="1146" height="754" alt="image" src="https://github.com/user-attachments/assets/c213b004-8dde-4b76-9e34-d35d7ad3c4c1" />
+<img width="1146" height="754" alt="image" src="https://github.com/user-attachments/assets/3dc3f7fa-2522-4628-a211-44ef435bfa20" />
 
-<img width="1624" height="754" alt="image" src="https://github.com/user-attachments/assets/6c966fe8-f89b-4e53-829d-6dac9ad912e1" />
+<img width="1624" height="754" alt="image" src="https://github.com/user-attachments/assets/8b2b9d0b-9b5a-44b6-af3b-048cff1436a2" />
 
 * Standard model-viewer orbit controls are used.
 * When doing side by side comparison 

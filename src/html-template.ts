@@ -60,12 +60,21 @@ export function htmlTemplate(
     defaultAttributes['environment-image'] = environmentMap;
   }
 
+  const toUnitsStr = (sz) => {
+      const sgn = sz < 0 ? '-' : ''
+      const ui = sz == 0 ? 0 : Math.min(Math.trunc(Math.log2(Math.abs(sz))/10), 2);
+      const units = ['B', 'kB', 'MB'][ui];
+      const szs = (sz / Math.pow(2, ui * 10)).toFixed(ui);
+      return `${szs}${units}`
+  };
+
   const viewLabels = inputPaths.map((path, i) => {
     let fileStem = path.split('/').pop();
     fileStem = fileStem.split('.').slice(0, -1).join('.');
-    const fileK = (inputSizes[i] / 1024).toFixed(1);
-    return fileStem + ` ${fileK}kB`;
+    return `${fileStem} [${toUnitsStr(inputSizes[i])}]`;
   });
+
+  const diffLabel = viewLabels.length > 1 ? `Diff [${toUnitsStr(inputSizes[0] - inputSizes[1])}]` : "";
 
   const input0AttributesString = toHTMLAttributeString(defaultAttributes);
   const modelViewer0 = `<model-viewer id="viewer0" camera-controls ${input0AttributesString}/>`;
@@ -232,7 +241,7 @@ export function htmlTemplate(
         // Set the diff header content
         const diffHeader = document.getElementById('diffHeader');
         if (diffHeader) {
-          diffHeader.textContent = 'Diff';
+          diffHeader.textContent = '${diffLabel}';
         }
         
         // Dynamically create the diff canvas element

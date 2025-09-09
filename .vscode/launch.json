@@ -6,6 +6,7 @@
   "configurations": [    
 
 
+
     {
       "name": "run viewer [1]",
       "program": "${workspaceFolder}/src/cli.ts",
@@ -24,7 +25,7 @@
       "preLaunchTask": "tsc: build - tsconfig.json",
       "request": "launch",
       "cwd": "${workspaceFolder}/test/fixtures",
-      "args": ["shoe.glb", "shoe_webp512.glb"],
+      "args": ["shoe_webp512.glb", "shoe.glb"],
       "skipFiles": [
         "<node_internals>/**"
       ],
@@ -36,7 +37,7 @@
       "preLaunchTask": "tsc: build - tsconfig.json",
       "request": "launch",
       "cwd": "${workspaceFolder}/test/fixtures",
-      "args": ["shoe.glb", "shoe_webp512.glb", "--environment_map=environment.jpg", "--exposure=1.4"],
+      "args": ["shoe_webp512.glb", "shoe.glb", "--environment_map=environment.jpg", "--exposure=1.4"],
       "skipFiles": [
         "<node_internals>/**"
       ],

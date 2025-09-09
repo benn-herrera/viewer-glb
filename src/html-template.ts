@@ -7,6 +7,7 @@ export interface TemplateViewerOptions {
   width: number;
   height: number;
   inputPaths: string[];
+  inputSizes: number[];
   backgroundColor: string;
   environmentMap: string;
   exposure: number;
@@ -37,6 +38,7 @@ export function htmlTemplate(
     width,
     height,
     inputPaths,
+    inputSizes,
     backgroundColor,
     environmentMap,
     exposure,
@@ -59,9 +61,12 @@ export function htmlTemplate(
   }
 
   // Extract file stems for headers
-  const fileStems = inputPaths.map((path) => {
+  const fileStems = inputPaths.map((path, i) => {
     const fileName = path.split('/').pop();
-    return fileName.split('.').slice(0, -1).join('.');
+    const fileStem = fileName.split('.').slice(0, -1).join('.');
+    // AI! format string fileKb to equivalent of python .1f
+    const fileKb = `${inputSizes[i] / 1024}`
+    return fileStem + ` ${fileKb}kb`;
   });
 
   const input0AttributesString = toHTMLAttributeString(defaultAttributes);

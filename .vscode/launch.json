@@ -4,13 +4,15 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [    
+
+
     {
       "name": "run viewer [1]",
       "program": "${workspaceFolder}/src/cli.ts",
       "preLaunchTask": "tsc: build - tsconfig.json",
       "request": "launch",
       "cwd": "${workspaceFolder}/test/fixtures",
-      "args": ["Astronaut.glb"],
+      "args": ["WaterBottle.glb"],
       "skipFiles": [
         "<node_internals>/**"
       ],
@@ -22,7 +24,7 @@
       "preLaunchTask": "tsc: build - tsconfig.json",
       "request": "launch",
       "cwd": "${workspaceFolder}/test/fixtures",
-      "args": ["Astronaut.glb", "WaterBottle.glb"],
+      "args": ["shoe.glb", "shoe_webp512.glb"],
       "skipFiles": [
         "<node_internals>/**"
       ],
@@ -34,7 +36,7 @@
       "preLaunchTask": "tsc: build - tsconfig.json",
       "request": "launch",
       "cwd": "${workspaceFolder}/test/fixtures",
-      "args": ["Astronaut.glb", "Astronaut.glb", "--environment_map=environment.jpg", "--exposure=1.4"],
+      "args": ["shoe.glb", "shoe_webp512.glb", "--environment_map=environment.jpg", "--exposure=1.4"],
       "skipFiles": [
         "<node_internals>/**"
       ],

@@ -44,7 +44,7 @@ export async function prepareAppOptions({
   const inputPaths = model3dFileNames.map((n) => {
     return getLocalUrl({port: localServerPort, fileName: n});
   });
-  const inputSizes = model3dFileNames.map((fileName) => {
+  const inputSizes = inputs.map((fileName) => {
     return statSync(fileName).size;
   });
 

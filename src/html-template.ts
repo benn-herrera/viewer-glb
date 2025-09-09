@@ -60,18 +60,17 @@ export function htmlTemplate(
     defaultAttributes['environment-image'] = environmentMap;
   }
 
-  // Extract file stems for headers
-  const fileStems = inputPaths.map((path, i) => {
-    const fileName = path.split('/').pop();
-    const fileStem = fileName.split('.').slice(0, -1).join('.');
-    const fileKb = (inputSizes[i] / 1024).toFixed(1);
-    return fileStem + ` ${fileKb}kb`;
+  const viewLabels = inputPaths.map((path, i) => {
+    let fileStem = path.split('/').pop();
+    fileStem = fileStem.split('.').slice(0, -1).join('.');
+    const fileK = (inputSizes[i] / 1024).toFixed(1);
+    return fileStem + ` ${fileK}kB`;
   });
 
   const input0AttributesString = toHTMLAttributeString(defaultAttributes);
   const modelViewer0 = `<model-viewer id="viewer0" camera-controls ${input0AttributesString}/>`;
   let modelViewer1: string = '';
-  let tableStart: string = `<table><thead><tr><th>${fileStems[0]}</th></tr></thead><tbody><tr><td>`;
+  let tableStart: string = `<table><thead><tr><th>${viewLabels[0]}</th></tr></thead><tbody><tr><td>`;
   let tableSeparator = '';
   let tableEnd: string = '</td></tr></tbody></table>';
 
@@ -79,7 +78,7 @@ export function htmlTemplate(
     defaultAttributes.src = inputPaths[1];
     const input1AttributesString = toHTMLAttributeString(defaultAttributes);
     modelViewer1 = `<model-viewer id="viewer1" camera-controls ${input1AttributesString}/>`;
-    tableStart = `<table><thead><tr><th>${fileStems[0]}</th><th id="diffHeader"></th><th>${fileStems[1]}</th></tr></thead><tbody><tr><td>`;
+    tableStart = `<table><thead><tr><th>${viewLabels[0]}</th><th id="diffHeader"></th><th>${viewLabels[1]}</th></tr></thead><tbody><tr><td>`;
     tableSeparator = '</td><td id="diffContainer"></td><td>';
     tableEnd =
       '</td></tr><tr><td colspan="3" style="text-align: center;"><button id="toggleDiff" class="diffToggle">Toggle Diff</button></td></tr></tbody></table>';

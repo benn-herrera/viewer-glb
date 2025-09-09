@@ -5,6 +5,7 @@ import {checkFileExistsAtUrl} from './check-file-exists-at-url';
 import {getLocalUrl} from './get-local-url';
 import {FileHandler} from './file-handler';
 import {existsSync, statSync} from 'fs';
+import path from 'path';
 
 export interface Argv {
   input0: string;
@@ -43,8 +44,9 @@ export async function prepareAppOptions({
   const inputPaths = model3dFileNames.map((n) => {
     return getLocalUrl({port: localServerPort, fileName: n});
   });
-  const inputSizes = model3dFileNames.map((fn) => {
-    return statSync(fn).size;
+  const inputSizes = model3dFileNames.map((fileName) => {
+    const fullPath = path.join(fileHandler.fileDirectory, fileName);
+    return statSync(fullPath).size;
   });
 
   const defaultBackgroundColor = colors.gray;

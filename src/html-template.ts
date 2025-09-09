@@ -7,6 +7,7 @@ export interface TemplateViewerOptions {
   width: number;
   height: number;
   inputPaths: string[];
+  inputSizes: number[];
   backgroundColor: string;
   environmentMap: string;
   exposure: number;
@@ -37,6 +38,7 @@ export function htmlTemplate(
     width,
     height,
     inputPaths,
+    inputSizes,
     backgroundColor,
     environmentMap,
     exposure,
@@ -58,16 +60,26 @@ export function htmlTemplate(
     defaultAttributes['environment-image'] = environmentMap;
   }
 
-  // Extract file stems for headers
-  const fileStems = inputPaths.map((path) => {
-    const fileName = path.split('/').pop();
-    return fileName.split('.').slice(0, -1).join('.');
+  const toUnitsStr = (sz) => {
+      const sgn = sz < 0 ? '-' : ''
+      const ui = sz == 0 ? 0 : Math.min(Math.trunc(Math.log2(Math.abs(sz))/10), 2);
+      const units = ['B', 'kB', 'MB'][ui];
+      const szs = (sz / Math.pow(2, ui * 10)).toFixed(ui);
+      return `${szs}${units}`
+  };
+
+  const viewLabels = inputPaths.map((path, i) => {
+    let fileStem = path.split('/').pop();
+    fileStem = fileStem.split('.').slice(0, -1).join('.');
+    return `${fileStem} [${toUnitsStr(inputSizes[i])}]`;
   });
+
+  const diffLabel = viewLabels.length > 1 ? `Diff [${toUnitsStr(inputSizes[0] - inputSizes[1])}]` : "";
 
   const input0AttributesString = toHTMLAttributeString(defaultAttributes);
   const modelViewer0 = `<model-viewer id="viewer0" camera-controls ${input0AttributesString}/>`;
   let modelViewer1: string = '';
-  let tableStart: string = `<table><thead><tr><th>${fileStems[0]}</th></tr></thead><tbody><tr><td>`;
+  let tableStart: string = `<table><thead><tr><th>${viewLabels[0]}</th></tr></thead><tbody><tr><td>`;
   let tableSeparator = '';
   let tableEnd: string = '</td></tr></tbody></table>';
 
@@ -75,7 +87,7 @@ export function htmlTemplate(
     defaultAttributes.src = inputPaths[1];
     const input1AttributesString = toHTMLAttributeString(defaultAttributes);
     modelViewer1 = `<model-viewer id="viewer1" camera-controls ${input1AttributesString}/>`;
-    tableStart = `<table><thead><tr><th>${fileStems[0]}</th><th id="diffHeader"></th><th>${fileStems[1]}</th></tr></thead><tbody><tr><td>`;
+    tableStart = `<table><thead><tr><th>${viewLabels[0]}</th><th id="diffHeader"></th><th>${viewLabels[1]}</th></tr></thead><tbody><tr><td>`;
     tableSeparator = '</td><td id="diffContainer"></td><td>';
     tableEnd =
       '</td></tr><tr><td colspan="3" style="text-align: center;"><button id="toggleDiff" class="diffToggle">Toggle Diff</button></td></tr></tbody></table>';
@@ -168,16 +180,19 @@ export function htmlTemplate(
           const b1 = data1[i + 2];
           
           // Calculate diff magnitude
-          const diff = Math.max(Math.abs(r1 - r0), Math.max(Math.abs(g1 - g0), Math.abs(b1 - b0)));
-          const idiff = 255 - diff;
+          let idiff = 1.0 - Math.max(Math.abs(r1 - r0), Math.max(Math.abs(g1 - g0), Math.abs(b1 - b0))) / 255.0;
+          idiff = idiff * idiff * idiff;
+          const diff = 1.0 - idiff;
+          idiff *= 0.5;
+          // marker color
           const diffR = 255;
           const diffG = 0;
           const diffB = 255;
 
           // blend with diff color.
-          diffData[i + 0] = (r0 * idiff + diffR * diff) / 255;
-          diffData[i + 1] = (g0 * idiff + diffG * diff) / 255;
-          diffData[i + 2] = (b0 * idiff + diffB * diff) / 255;
+          diffData[i + 0] = (r0 * idiff + diffR * diff);
+          diffData[i + 1] = (g0 * idiff + diffG * diff);
+          diffData[i + 2] = (b0 * idiff + diffB * diff);
           diffData[i + 3] = 255;
         }
         
@@ -226,7 +241,7 @@ export function htmlTemplate(
         // Set the diff header content
         const diffHeader = document.getElementById('diffHeader');
         if (diffHeader) {
-          diffHeader.textContent = 'Diff';
+          diffHeader.textContent = '${diffLabel}';
         }
         
         // Dynamically create the diff canvas element

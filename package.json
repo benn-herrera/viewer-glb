@@ -1,6 +1,6 @@
 {
   "name": "viewer-glb",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "publishConfig": {
     "access": "public"
   },
@@ -8,6 +8,10 @@
   "bin": {
     "viewer-glb": "./dist/cli.js"
   },
+  "files": [
+    "dist",
+    "src/*.ts"
+  ],
   "scripts": {
     "prepare": "yarn build",
     "build": "tsc",

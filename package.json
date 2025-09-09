@@ -8,6 +8,10 @@
   "bin": {
     "viewer-glb": "./dist/cli.js"
   },
+  "files": [
+    "dist",
+    "src/*.ts"
+  ],
   "scripts": {
     "prepare": "yarn build",
     "build": "tsc",

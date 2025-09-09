@@ -43,6 +43,10 @@ export async function prepareAppOptions({
   const inputPaths = model3dFileNames.map((n) => {
     return getLocalUrl({port: localServerPort, fileName: n});
   });
+  const inputSize = model3dFileNames.map((fn) => {
+    // AI! return size of file at path fn in bytes
+  });
+
   const defaultBackgroundColor = colors.gray;
   let environmentMapUrl: string = null;
   if (environmentMap) {
@@ -75,5 +79,6 @@ export async function prepareAppOptions({
     height,
     width,
     inputPaths,
+    inputSizes,
   };
 }

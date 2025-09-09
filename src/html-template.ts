@@ -64,8 +64,7 @@ export function htmlTemplate(
   const fileStems = inputPaths.map((path, i) => {
     const fileName = path.split('/').pop();
     const fileStem = fileName.split('.').slice(0, -1).join('.');
-    // AI! format string fileKb to equivalent of python .1f
-    const fileKb = `${inputSizes[i] / 1024}`
+    const fileKb = (inputSizes[i] / 1024).toFixed(1);
     return fileStem + ` ${fileKb}kb`;
   });
 

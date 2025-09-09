@@ -4,7 +4,7 @@ import {getModelViewerUrl} from './get-model-viewer-url';
 import {checkFileExistsAtUrl} from './check-file-exists-at-url';
 import {getLocalUrl} from './get-local-url';
 import {FileHandler} from './file-handler';
-import {existsSync} from 'fs';
+import {existsSync, statSync} from 'fs';
 
 export interface Argv {
   input0: string;
@@ -43,8 +43,8 @@ export async function prepareAppOptions({
   const inputPaths = model3dFileNames.map((n) => {
     return getLocalUrl({port: localServerPort, fileName: n});
   });
-  const inputSize = model3dFileNames.map((fn) => {
-    // AI! return size of file at path fn in bytes
+  const inputSizes = model3dFileNames.map((fn) => {
+    return statSync(fn).size;
   });
 
   const defaultBackgroundColor = colors.gray;
